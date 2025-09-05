@@ -1,0 +1,193 @@
+---
+title: Kitchen Sink - MDX Showcase
+description: A comprehensive example showcasing all markdown elements and React components in MDX.
+date: 2025-08-25
+author: Claude
+tags: [mdx, showcase, components]
+---
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { AlertTriangle, Info, CheckCircle, Heart } from 'lucide-react'
+
+# Kitchen Sink - MDX Showcase
+
+Welcome to the **kitchen sink** example! This page demonstrates all the markdown elements and React components working together in MDX.
+
+<Alert>
+  <Info className="h-4 w-4" />
+  <AlertTitle>Info</AlertTitle>
+  <AlertDescription>
+    This is a custom React component embedded in markdown!
+  </AlertDescription>
+</Alert>
+
+## Typography Examples
+
+### This is an H3 heading
+#### This is an H4 heading
+
+Here's a paragraph with **bold text**, *italic text*, and ***bold italic text***. You can also use `inline code` and ~~strikethrough text~~.
+
+> This is a blockquote. It can span multiple lines and is great for highlighting important information.
+
+<Separator className="my-6" />
+
+## Lists
+
+### Unordered List
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+- Third item
+
+### Ordered List
+1. First step
+2. Second step
+   1. Sub-step A
+   2. Sub-step B
+3. Third step
+
+<Separator className="my-6" />
+
+## Code Examples
+
+### Inline Code
+Use the `useState` hook to manage component state in React.
+
+### Code Blocks
+
+```javascript
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+const message = greet("World");
+console.log(message);
+```
+
+<Separator className="my-6" />
+
+## React Components
+
+### Buttons and Badges
+
+<div className="flex gap-4 items-center mb-4">
+  <Button>Default Button</Button>
+  <Button variant="outline">Outline Button</Button>
+  <Badge>Default</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+</div>
+
+### Interactive Card Component
+
+<Card className="w-full max-w-md mb-6">
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Heart className="h-5 w-5 text-red-500" />
+      Interactive Card
+    </CardTitle>
+    <CardDescription>
+      This card is rendered as a React component within the MDX content.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>You can include any React component here, with full interactivity!</p>
+    <div className="mt-4">
+      <Button className="w-full">
+        Click me!
+      </Button>
+    </div>
+  </CardContent>
+</Card>
+
+### Alert Components
+
+<Alert className="mb-4">
+  <CheckCircle className="h-4 w-4" />
+  <AlertTitle>Success!</AlertTitle>
+  <AlertDescription>
+    Your operation completed successfully.
+  </AlertDescription>
+</Alert>
+
+<Alert variant="destructive" className="mb-4">
+  <AlertTriangle className="h-4 w-4" />
+  <AlertTitle>Warning</AlertTitle>
+  <AlertDescription>
+    This is a destructive alert variant.
+  </AlertDescription>
+</Alert>
+
+<Separator className="my-6" />
+
+## Tables
+
+| Feature | Support | Notes |
+|---------|---------|-------|
+| Headers | ✅ | Full support |
+| Lists | ✅ | Nested lists work |
+| Code blocks | ✅ | Syntax highlighting |
+| React components | ✅ | Full JSX support |
+
+<Separator className="my-6" />
+
+## Links and Images
+
+Here's a [link to Google](https://google.com) and here's an internal link that would work.
+
+<Separator className="my-6" />
+
+## Frontmatter Data Access
+
+This post was written by Claude on 2025-08-25.
+
+<div className="flex gap-2 mt-2">
+  <Badge variant="outline">mdx</Badge>
+  <Badge variant="outline">showcase</Badge>
+  <Badge variant="outline">components</Badge>
+</div>
+
+<Separator className="my-6" />
+
+## Custom Components in Action
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+  <Card>
+    <CardHeader>
+      <CardTitle>Card 1</CardTitle>
+      <CardDescription>First example card</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <p>This demonstrates layout capabilities with components.</p>
+    </CardContent>
+  </Card>
+
+  <Card>
+    <CardHeader>
+      <CardTitle>Card 2</CardTitle>
+      <CardDescription>Second example card</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <p>Components can be arranged in grids and layouts.</p>
+    </CardContent>
+  </Card>
+</div>
+
+---
+
+## Conclusion
+
+This kitchen sink example demonstrates the power of combining Markdown with React components in MDX. You can:
+
+- ✅ Use all standard Markdown syntax
+- ✅ Import and use React components
+- ✅ Access frontmatter data
+- ✅ Create interactive content
+- ✅ Mix prose with UI components seamlessly
+
+The possibilities are endless!

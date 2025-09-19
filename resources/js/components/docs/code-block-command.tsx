@@ -63,7 +63,7 @@ export function CodeBlockCommand({
             >
                 <div className="flex items-center gap-2 border-b border-border/50 px-3 py-1">
                     <div className="flex size-4 items-center justify-center rounded-[1px] bg-foreground opacity-70">
-                        <TerminalIcon className="text-code size-3" />
+                        <TerminalIcon className="size-3 text-code" />
                     </div>
                     <TabsList className="rounded-none bg-transparent p-0">
                         {Object.entries(tabs).map(([key]) => {

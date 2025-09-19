@@ -176,7 +176,7 @@
 }
 
 @utility section-soft {
-    @apply from-background to-surface/40 dark:bg-background 3xl:fixed:bg-none bg-gradient-to-b;
+    @apply bg-gradient-to-b from-background to-surface/40 dark:bg-background 3xl:fixed:bg-none;
 }
 
 @utility theme-container {
@@ -184,11 +184,11 @@
 }
 
 @utility container-wrapper {
-    @apply 3xl:fixed:max-w-[calc(var(--breakpoint-2xl)+2rem)] mx-auto w-full px-2;
+    @apply mx-auto w-full px-2 3xl:fixed:max-w-[calc(var(--breakpoint-2xl)+2rem)];
 }
 
 @utility container {
-    @apply 3xl:max-w-screen-2xl mx-auto max-w-[1400px] px-4 lg:px-8;
+    @apply mx-auto max-w-[1400px] px-4 3xl:max-w-screen-2xl lg:px-8;
 }
 
 @utility no-scrollbar {
@@ -201,7 +201,7 @@
 }
 
 @utility border-ghost {
-    @apply after:border-border relative after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten;
+    @apply relative after:absolute after:inset-0 after:border after:border-border after:mix-blend-darken dark:after:mix-blend-lighten;
 }
 
 @utility step {
@@ -209,7 +209,7 @@
     @apply relative;
 
     &:before {
-        @apply text-muted-foreground right-0 mr-2 hidden size-7 items-center justify-center rounded-full text-center -indent-px font-mono text-sm font-medium md:absolute;
+        @apply right-0 mr-2 hidden size-7 items-center justify-center rounded-full text-center -indent-px font-mono text-sm font-medium text-muted-foreground md:absolute;
         content: counter(step);
     }
 }
@@ -217,6 +217,16 @@
 @utility extend-touch-target {
     @media (pointer: coarse) {
         @apply relative touch-manipulation after:absolute after:-inset-2;
+    }
+}
+
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
     }
 }
 
@@ -252,7 +262,7 @@
         position: relative;
         @apply md:-mx-1;
 
-        &:has([data-rehype-pretty-code-title]) [data-slot="copy-button"] {
+        &:has([data-rehype-pretty-code-title]) [data-slot='copy-button'] {
             top: calc(var(--spacing) * 1.5) !important;
         }
     }
@@ -326,12 +336,8 @@
             left: 0;
             width: 2px;
             height: 100%;
-            content: "";
-            background-color: color-mix(
-                in oklab,
-                var(--muted-foreground) 50%,
-                transparent
-            );
+            content: '';
+            background-color: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
         }
     }
 

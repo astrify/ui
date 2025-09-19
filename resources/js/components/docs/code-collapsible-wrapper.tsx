@@ -21,7 +21,7 @@ export function CodeCollapsibleWrapper({ className, children, ...props }: React.
             <CollapsibleContent forceMount className="relative mt-6 overflow-hidden data-[state=closed]:max-h-64 [&>figure]:mt-0 [&>figure]:md:!mx-0">
                 {children}
             </CollapsibleContent>
-            <CollapsibleTrigger className="from-code/70 to-code absolute inset-x-0 -bottom-2 flex h-20 items-center justify-center rounded-b-lg bg-gradient-to-b text-sm text-muted-foreground group-data-[state=open]/collapsible:hidden">
+            <CollapsibleTrigger className="absolute inset-x-0 -bottom-2 flex h-20 items-center justify-center rounded-b-lg bg-gradient-to-b from-code/70 to-code text-sm text-muted-foreground group-data-[state=open]/collapsible:hidden">
                 {isOpened ? 'Collapse' : 'Expand'}
             </CollapsibleTrigger>
         </Collapsible>

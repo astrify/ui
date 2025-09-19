@@ -8,14 +8,7 @@
             "type": "registry:example",
             "title": "Upload with Inertia.js",
             "description": "A complete file upload form example integrated with Laravel Inertia.js, showing form handling, validation, and submission.",
-            "dependencies": [
-                "react-dropzone",
-                "lucide-react",
-                "clsx",
-                "tailwind-merge",
-                "sonner",
-                "@inertiajs/react"
-            ],
+            "dependencies": ["react-dropzone", "lucide-react", "clsx", "tailwind-merge", "sonner", "@inertiajs/react"],
             "registryDependencies": ["input", "label", "button"],
             "files": [
                 {

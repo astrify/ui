@@ -31,7 +31,6 @@ const footerNavItems: NavItem[] = [
 export function AppSidebar() {
     const { auth } = usePage<SharedData>().props;
 
-
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

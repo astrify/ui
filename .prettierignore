@@ -1,2 +1,4 @@
 resources/js/components/ui/*
+resources/js/components/upload/*
+resources/js/posts/*
 resources/views/mail/*

@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dropzone } from "@/components/upload/dropzone";
-import { Errors } from "@/components/upload/errors";
-import { Header } from "@/components/upload/header";
-import { List } from "@/components/upload/list";
-import { FileUploadProvider, useFileUpload } from "@benbjurstrom/react-s3-upload";
-import { useForm } from "@inertiajs/react";
-import { LoaderCircle } from "lucide-react";
-import type { FormEventHandler } from "react";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dropzone } from '@/components/upload/dropzone';
+import { Errors } from '@/components/upload/errors';
+import { Header } from '@/components/upload/header';
+import { List } from '@/components/upload/list';
+import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
+import { useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import type { FormEventHandler } from 'react';
 
 type UploadForm = {
     name: string;
@@ -48,23 +48,19 @@ interface UploadInertiaProps {
     className?: string;
 }
 
-function FormContent({
-                         submitEndpoint = "/documents",
-                     }: { submitEndpoint: string }) {
-    const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } =
-        useFileUpload();
+function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string }) {
+    const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } = useFileUpload();
 
-    const { data, setData, post, processing, errors, reset } =
-        useForm<UploadForm>({
-            name: "",
-            uploadedFiles: [],
-        });
+    const { data, setData, post, processing, errors, reset } = useForm<UploadForm>({
+        name: '',
+        uploadedFiles: [],
+    });
 
     const submitForm: FormEventHandler = (e) => {
         e.preventDefault();
 
         // Extract only completed files for submission
-        const completedFiles = files.filter((f) => f.status === "complete");
+        const completedFiles = files.filter((f) => f.status === 'complete');
 
         // Update the form data with completed files
         const formData = {
@@ -79,23 +75,18 @@ function FormContent({
         };
 
         // Submit using Inertia
-        post("/documents", {
+        post('/documents', {
             onFinish: () => {
                 // Reset the name field after successful submission
-                reset("name");
+                reset('name');
                 removeAll(); // Clear all files from the upload context
-                console.log("Form submitted successfully");
+                console.log('Form submitted successfully');
             },
         });
     };
 
     // Enable submit only when all uploads are complete and form has a name
-    const canSubmit =
-        hasComplete &&
-        !hasPending &&
-        !hasUploading &&
-        !hasErrors &&
-        data.name.length > 0;
+    const canSubmit = hasComplete && !hasPending && !hasUploading && !hasErrors && data.name.length > 0;
 
     return (
         <form onSubmit={submitForm} className="space-y-6">
@@ -108,11 +99,9 @@ function FormContent({
                     placeholder="Enter your name"
                     required={true}
                     value={data.name}
-                    onChange={(e) => setData("name", e.target.value)}
+                    onChange={(e) => setData('name', e.target.value)}
                 />
-                {errors.name && (
-                    <p className="text-destructive text-sm">{errors.name}</p>
-                )}
+                {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
@@ -123,30 +112,24 @@ function FormContent({
                     <Errors />
                     <List showImagePreviews={false} />
                 </div>
-                {errors.uploadedFiles && (
-                    <p className="text-destructive text-sm">{errors.uploadedFiles}</p>
-                )}
+                {errors.uploadedFiles && <p className="text-sm text-destructive">{errors.uploadedFiles}</p>}
             </div>
 
-            <Button
-                type="submit"
-                disabled={!canSubmit || processing}
-                className="w-full sm:w-auto"
-            >
+            <Button type="submit" disabled={!canSubmit || processing} className="w-full sm:w-auto">
                 {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                Submit with {files.filter((f) => f.status === "complete").length} files
+                Submit with {files.filter((f) => f.status === 'complete').length} files
             </Button>
         </form>
     );
 }
 
 export function UploadInertia({
-                                  signedUrlEndpoint = "/upload/signed-url",
-                                  submitEndpoint = "/documents",
-                                  maxFiles = 10,
-                                  maxSize = 10 * 1024 * 1024, // 10MB
-                                  className,
-                              }: UploadInertiaProps) {
+    signedUrlEndpoint = '/upload/signed-url',
+    submitEndpoint = '/documents',
+    maxFiles = 10,
+    maxSize = 10 * 1024 * 1024, // 10MB
+    className,
+}: UploadInertiaProps) {
     return (
         <div className={className}>
             <FileUploadProvider
@@ -155,8 +138,8 @@ export function UploadInertia({
                     maxFiles,
                     maxSize,
                     accept: {
-                        "image/*": [".png", ".jpeg", ".jpg"],
-                        "application/pdf": [".pdf"],
+                        'image/*': ['.png', '.jpeg', '.jpg'],
+                        'application/pdf': ['.pdf'],
                     },
                 }}
             >

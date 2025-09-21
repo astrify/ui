@@ -46,7 +46,11 @@ export const mdxComponents = {
     ),
     // Links - use Inertia Link for internal routes, regular anchor for external
     // Special handling for anchor links inside headings (from rehype-autolink-headings)
-    a: ({ className, href, ...props }: Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick' | 'onError' | 'onProgress' | 'onSuccess' | 'onStart' | 'onFinish'>) => {
+    a: ({
+        className,
+        href,
+        ...props
+    }: Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick' | 'onError' | 'onProgress' | 'onSuccess' | 'onStart' | 'onFinish'>) => {
         const isExternal = href?.startsWith('http') || href?.startsWith('//');
         const isInternal = href?.startsWith('/');
         const isHashLink = href?.startsWith('#');
@@ -79,9 +83,7 @@ export const mdxComponents = {
     blockquote: ({ className, ...props }: React.ComponentProps<'blockquote'>) => (
         <blockquote className={cn('mt-6 border-l-2 pl-6 italic', className)} {...props} />
     ),
-    img: ({ className, alt, ...props }: React.ComponentProps<'img'>) => (
-        <img className={cn('rounded-md', className)} alt={alt} {...props} />
-    ),
+    img: ({ className, alt, ...props }: React.ComponentProps<'img'>) => <img className={cn('rounded-md', className)} alt={alt} {...props} />,
     hr: ({ ...props }: React.ComponentProps<'hr'>) => <hr className="my-4 md:my-8" {...props} />,
     table: ({ className, ...props }: React.ComponentProps<'table'>) => (
         <div className="my-6 w-full overflow-y-auto">

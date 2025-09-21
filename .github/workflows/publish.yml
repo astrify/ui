@@ -1,0 +1,130 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Publish
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook and Registry
+        run: |
+          # Build Storybook with base path for GitHub Pages
+          GITHUB_PAGES=true pnpm storybook:build
+
+          # Build registry components
+          pnpm registry:build
+
+          # Copy registry files to Storybook output
+          cp -r public/r storybook-static/r
+
+          # Add .nojekyll to serve files starting with underscore
+          touch storybook-static/.nojekyll
+
+          # Create a simple registry index page with links to all components
+          cat > storybook-static/r/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <meta charset="utf-8">
+              <title>React S3 Upload - shadcn Registry</title>
+              <style>
+                  body { font-family: system-ui, -apple-system, sans-serif; padding: 2rem; max-width: 800px; margin: 0 auto; }
+                  h1 { color: #333; }
+                  .component-list { list-style: none; padding: 0; }
+                  .component-list li { margin: 0.5rem 0; }
+                  .component-list a { color: #0066cc; text-decoration: none; }
+                  .component-list a:hover { text-decoration: underline; }
+                  .back-link { margin-bottom: 2rem; }
+                  pre { background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+              </style>
+          </head>
+          <body>
+              <div class="back-link">
+                  <a href="../">← Back to Storybook</a>
+              </div>
+              <h1>React S3 Upload - shadcn Registry</h1>
+              <p>Registry components for the React S3 Upload library.</p>
+
+              <h2>Available Components:</h2>
+              <ul class="component-list">
+                  <li><a href="file-upload-complete.json">file-upload-complete.json</a> - Complete file upload system (all components)</li>
+                  <li><a href="file-dropzone.json">file-dropzone.json</a> - File dropzone with drag-and-drop</li>
+                  <li><a href="file-list.json">file-list.json</a> - File list with progress tracking</li>
+                  <li><a href="file-header.json">file-header.json</a> - File header with actions</li>
+                  <li><a href="file-errors.json">file-errors.json</a> - Error display with toast notifications</li>
+              </ul>
+
+              <h2>Installation:</h2>
+              <p>Install the complete system:</p>
+              <pre><code>npx shadcn@latest add https://astrify.github.io/react-s3-upload/r/file-upload-complete.json</code></pre>
+
+              <p>Or install individual components:</p>
+              <pre><code>npx shadcn@latest add https://astrify.github.io/react-s3-upload/r/file-dropzone.json</code></pre>
+          </body>
+          </html>
+          EOF
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./storybook-static
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Build and publish to npm
+        if: github.ref == 'refs/tags/*' # Only run on version tags
+        run: |
+          pnpm build
+          npm login --registry=https://registry.npmjs.org/ --scope=your-scope
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

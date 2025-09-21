@@ -1,34 +1,26 @@
 {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "@benbjurstrom/react-s3-upload",
-    "homepage": "https://github.com/benbjurstrom/react-s3-upload",
+    "name": "@astrify/ui",
+    "homepage": "https://astrify.com",
     "items": [
         {
-            "name": "upload-inertia",
+            "name": "inertia-upload",
             "type": "registry:example",
             "title": "Upload with Inertia.js",
             "description": "A complete file upload form example integrated with Laravel Inertia.js, showing form handling, validation, and submission.",
             "dependencies": ["react-dropzone", "lucide-react", "clsx", "tailwind-merge", "sonner", "@inertiajs/react"],
-            "registryDependencies": ["input", "label", "button"],
+            "registryDependencies": [
+                "input",
+                "label",
+                "button",
+                "https://astrify.github.io/react-s3-upload/r/dropzone.json",
+                "https://astrify.github.io/react-s3-upload/r/list.json",
+                "https://astrify.github.io/react-s3-upload/r/errors.json",
+                "https://astrify.github.io/react-s3-upload/r/header.json"
+            ],
             "files": [
                 {
-                    "path": "src/components/upload/upload-inertia.tsx",
-                    "type": "registry:component"
-                },
-                {
-                    "path": "src/components/upload/dropzone.tsx",
-                    "type": "registry:component"
-                },
-                {
-                    "path": "src/components/upload/list.tsx",
-                    "type": "registry:component"
-                },
-                {
-                    "path": "src/components/upload/errors.tsx",
-                    "type": "registry:component"
-                },
-                {
-                    "path": "src/components/upload/header.tsx",
+                    "path": "resources/js/components/astrify/inertia-upload.tsx",
                     "type": "registry:component"
                 },
                 {

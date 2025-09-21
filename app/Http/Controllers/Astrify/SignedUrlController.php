@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Astrify;
 
 use Aws\S3\S3Client;
 use Aws\Signature\S3SignatureV4;
@@ -8,6 +8,7 @@ use Aws\Signature\SignatureProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\Controller;
 
 class SignedUrlController extends Controller
 {

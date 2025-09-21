@@ -27,6 +27,7 @@ class DocsController extends Controller
             'slug' => $slug,
             'meta' => $entry['meta'] ?? [],
             'toc' => $entry['toc'] ?? null,
+            'manifest' => $manifest,
         ]);
     }
 }

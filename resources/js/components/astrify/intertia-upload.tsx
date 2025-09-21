@@ -21,7 +21,7 @@ type UploadForm = {
     }>;
 };
 
-interface UploadInertiaProps {
+interface InertiaUploadProps {
     /**
      * The endpoint URL for signed storage URLs (e.g., '/upload/signed-url')
      */
@@ -75,7 +75,7 @@ function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string
         };
 
         // Submit using Inertia
-        post('/documents', {
+        post(submitEndpoint, {
             onFinish: () => {
                 // Reset the name field after successful submission
                 reset('name');
@@ -123,13 +123,13 @@ function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string
     );
 }
 
-export function UploadInertia({
+export function InertiaUpload({
     signedUrlEndpoint = '/upload/signed-url',
     submitEndpoint = '/documents',
     maxFiles = 10,
     maxSize = 10 * 1024 * 1024, // 10MB
     className,
-}: UploadInertiaProps) {
+}: InertiaUploadProps) {
     return (
         <div className={className}>
             <FileUploadProvider

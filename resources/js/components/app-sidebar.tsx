@@ -1,3 +1,4 @@
+import { DocsNav } from '@/components/docs/docs-nav';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -28,7 +29,26 @@ const footerNavItems: NavItem[] = [
     },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+    docsManifest?: Array<{
+        slug: string;
+        meta: {
+            title: string;
+            description?: string;
+            date?: string;
+            author?: string;
+            tags?: string[];
+            readingTime?: number;
+        };
+        toc?: Array<{
+            title: string;
+            url: string;
+            depth: number;
+        }> | null;
+    }>;
+}
+
+export function AppSidebar({ docsManifest }: AppSidebarProps = {}) {
     const { auth } = usePage<SharedData>().props;
 
     return (
@@ -47,6 +67,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                {docsManifest && <DocsNav manifest={docsManifest} />}
             </SidebarContent>
 
             <SidebarFooter>

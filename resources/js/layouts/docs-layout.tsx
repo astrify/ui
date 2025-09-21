@@ -13,16 +13,32 @@ type Props = {
         url: string;
         depth: number;
     }> | null;
+    manifest?: Array<{
+        slug: string;
+        meta: {
+            title: string;
+            description?: string;
+            date?: string;
+            author?: string;
+            tags?: string[];
+            readingTime?: number;
+        };
+        toc?: Array<{
+            title: string;
+            url: string;
+            depth: number;
+        }> | null;
+    }>;
     children: React.ReactNode;
 };
 
-export default function DocsLayout({ slug, meta = {}, toc, children }: Props) {
+export default function DocsLayout({ slug, meta = {}, toc, manifest, children }: Props) {
     const title = (meta.title as string) ?? slug.split('/').pop();
     const description = (meta.description as string) ?? '';
 
     return (
         <AppShell variant="sidebar">
-            <AppSidebar />
+            <AppSidebar docsManifest={manifest} />
             <AppContent variant="sidebar" className="overflow-x-hidden">
                 <AppSidebarHeader
                     breadcrumbs={[

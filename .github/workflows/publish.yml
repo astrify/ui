@@ -1,12 +1,11 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+# This workflow builds and publishes the shadcn registry to GitHub Pages when tags are pushed
 
-name: Publish
+name: Publish Registry
 
 on:
-  workflow_dispatch:
-  release:
-    types: [published]
+  push:
+    tags:
+      - '*'
 
 permissions:
   contents: read
@@ -50,22 +49,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Storybook and Registry
+      - name: Build Registry
         run: |
-          # Build Storybook with base path for GitHub Pages
-          GITHUB_PAGES=true pnpm storybook:build
-
           # Build registry components
           pnpm registry:build
 
-          # Copy registry files to Storybook output
-          cp -r public/r storybook-static/r
+          # Create output directory for registry
+          mkdir -p registry-static
+
+          # Copy registry files to output
+          cp -r public/r registry-static/r
 
           # Add .nojekyll to serve files starting with underscore
-          touch storybook-static/.nojekyll
+          touch registry-static/.nojekyll
 
           # Create a simple registry index page with links to all components
-          cat > storybook-static/r/index.html << 'EOF'
+          cat > registry-static/r/index.html << 'EOF'
           <!DOCTYPE html>
           <html>
           <head>
@@ -78,14 +77,10 @@ jobs:
                   .component-list li { margin: 0.5rem 0; }
                   .component-list a { color: #0066cc; text-decoration: none; }
                   .component-list a:hover { text-decoration: underline; }
-                  .back-link { margin-bottom: 2rem; }
                   pre { background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto; }
               </style>
           </head>
           <body>
-              <div class="back-link">
-                  <a href="../">← Back to Storybook</a>
-              </div>
               <h1>React S3 Upload - shadcn Registry</h1>
               <p>Registry components for the React S3 Upload library.</p>
 
@@ -114,17 +109,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./storybook-static
+          path: ./registry-static
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Build and publish to npm
-        if: github.ref == 'refs/tags/*' # Only run on version tags
-        run: |
-          pnpm build
-          npm login --registry=https://registry.npmjs.org/ --scope=your-scope
-          npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

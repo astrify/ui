@@ -1,5 +1,5 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { Upload } from '@/components/upload/upload';
+import { Upload } from '@/components/astrify/upload/upload';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';

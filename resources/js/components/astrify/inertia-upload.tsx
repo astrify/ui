@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dropzone } from '@/components/upload/dropzone';
-import { Errors } from '@/components/upload/errors';
-import { Header } from '@/components/upload/header';
-import { List } from '@/components/upload/list';
+import { Dropzone } from '@/components/astrify/upload/dropzone';
+import { Errors } from '@/components/astrify/upload/errors';
+import { Header } from '@/components/astrify/upload/header';
+import { List } from '@/components/astrify/upload/list';
 import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';

@@ -19,7 +19,7 @@ export function TerminalCard({
             content: (
                 <>
                     <span className="text-zinc-300">npx</span> <span className="text-emerald-400">shadcn</span>{' '}
-                    <span className="text-zinc-300">add</span> <span className="text-white">@astrify/upload</span>
+                    <span className="text-zinc-300">add</span> <span className="text-white">https://astrify.com/r/upload.json</span>
                 </>
             ),
         },

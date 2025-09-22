@@ -15,7 +15,7 @@ importers:
         specifier: ^2.2.0
         version: 2.2.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@inertiajs/react':
-        specifier: ^2.1.0
+        specifier: ^2.1.5
         version: 2.1.5(react@19.1.1)
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
@@ -39,7 +39,7 @@ importers:
         specifier: ^2.1.6
         version: 2.1.16(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@radix-ui/react-label':
-        specifier: ^2.1.2
+        specifier: ^2.1.7
         version: 2.1.7(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@radix-ui/react-navigation-menu':
         specifier: ^1.2.5

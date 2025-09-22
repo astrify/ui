@@ -1,6 +1,22 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Asterisk, Boxes, FileInput, Hammer, LayoutDashboard, Link, Lock, Mail, Plus, Table, Terminal, UploadCloud, Users } from 'lucide-react';
+import {
+    Asterisk,
+    Boxes,
+    FileInput,
+    Hammer,
+    LayoutDashboard,
+    Link,
+    Lock,
+    Mail,
+    Plus,
+    Table,
+    Table2,
+    Terminal,
+    TextCursorInput,
+    UploadCloud,
+    Users,
+} from 'lucide-react';
 
 const features = [
     {
@@ -29,46 +45,40 @@ const modules = [
     },
     {
         icon: Table,
-        title: 'Data Tables',
-        description: 'Sorting, filtering, pagination',
+        title: 'Paginated Tables',
+        description: 'Server-side pagination',
         status: 'Available Now',
     },
     {
-        icon: Lock,
-        title: 'Authentication System',
-        description: 'OAuth, magic links, passwords',
+        icon: TextCursorInput,
+        title: 'Combo Box',
+        description: 'Searchable select menus',
         status: 'Coming Soon',
     },
     {
-        icon: Users,
-        title: 'User Management',
-        description: 'Roles, permissions, profiles',
+        icon: Table2,
+        title: 'Data Tables',
+        description: 'Server-side sorting & filtering',
         status: 'Coming Soon',
     },
-    {
-        icon: FileInput,
-        title: 'Form Builder',
-        description: 'Schema‑driven forms',
-        status: 'Coming Soon',
-    },
-    {
-        icon: LayoutDashboard,
-        title: 'Dashboard Layouts',
-        description: 'Responsive shells',
-        status: 'Coming Soon',
-    },
-    {
-        icon: Mail,
-        title: 'Email Templates',
-        description: 'Postmark/MJML support',
-        status: 'Coming Soon',
-    },
-    {
-        icon: Link,
-        title: 'API Integration',
-        description: 'Auth, rate limits, retries',
-        status: 'Coming Soon',
-    },
+    // {
+    //     icon: Lock,
+    //     title: 'Activity Log UI',
+    //     description: 'User actions history',
+    //     status: 'Coming Soon',
+    // },
+    // {
+    //     icon: Lock,
+    //     title: 'OTP Login',
+    //     description: 'Passwordless auth',
+    //     status: 'Coming Soon',
+    // },
+    // {
+    //     icon: FileInput,
+    //     title: 'Team Management',
+    //     description: 'Invites, roles, permissions',
+    //     status: 'Coming Soon',
+    // },
     {
         icon: Plus,
         title: 'More coming weekly…',

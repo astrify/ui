@@ -1,8 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Asterisk, Github, Moon, Sun } from 'lucide-react';
+import { Asterisk, Github, Moon, Package, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import AppLogoIcon from '@/components/app-logo-icon';
+import { Link } from '@inertiajs/react';
+import { show as modulesRoute } from '@/routes/modules';
 
 export function Header() {
     const [isDark, setIsDark] = useState(false);
@@ -26,15 +29,16 @@ export function Header() {
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
                 <a href="#" className="inline-flex items-center gap-2">
                     <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                        <Asterisk className="h-4 w-4" />
+                        <AppLogoIcon className="size-5" />
                     </span>
                     <span className="text-[17px] font-semibold tracking-tight text-foreground">Astrify UI</span>
                 </a>
 
                 <div className="hidden items-center gap-8 md:flex">
-                    <a href="#modules" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+                    <Link href={modulesRoute('upload')} className="text-sm font-medium text-muted-foreground hover:text-foreground">
                         Modules
-                    </a>
+                    </Link>
+
                     <a href="#template" className="text-sm font-medium text-muted-foreground hover:text-foreground">
                         Template
                     </a>

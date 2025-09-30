@@ -1,0 +1,182 @@
+---
+title: Upload Component - File Upload with Inertia.js
+description: A complete file upload solution integrated with Laravel Inertia.js, featuring drag & drop, S3 storage, and comprehensive validation.
+date: 2025-09-29
+label: Upload Component
+tags: [upload, inertia, s3, laravel, component]
+category: Modules
+---
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Upload, FileText, Cloud, Shield, Zap } from 'lucide-react';
+import { UploadDemo, UploadDemoSource, ImageUploadDemo, ImageUploadDemoSource } from "@/components/examples/upload-demo"
+
+
+## Multi-file Upload
+Upload multiple files with drag & drop support, progress tracking, and error handling.
+
+<ComponentPreview
+  component={<UploadDemo />}
+  code={UploadDemoSource}
+  title="upload-demo.tsx"
+  language="tsx"
+/>
+
+## Single Image Upload
+
+Upload a single image file with preview and validation.
+
+<ComponentPreview
+  component={<ImageUploadDemo />}
+  code={ImageUploadDemoSource}
+  title="image-upload-demo.tsx"
+  language="tsx"
+/>
+
+## Installation Steps
+
+This module is designed to be installed into applications derived from the official Laravel React starter kit. For more information please read the <a href="/docs/introduction" className="underline">Introduction page</a>.
+
+### 1: Install the Module
+
+You can install the upload module using the shadcn registry system:
+
+```bash
+npx shadcn@latest add https://astrify.github.io/upload.json
+```
+
+In addition to installing the necessary JS dependencies, this command installs the following files into your application:
+
+```bash
+app/
+└── Http/
+    └── Controllers/
+        └── Astrify/
+            ├── SignedUrlController.php
+            └── UploadController.php
+resources/
+└── js/
+    └── pages/
+        └── upload.tsx
+```
+
+### 2: Install Laravel Dependencies
+
+Install the Flysystem S3 package via the Composer package manager:
+
+```bash
+composer require league/flysystem-aws-s3-v3:^3.0
+```
+
+### 3: Configure Routes
+
+Add the following routes to your `routes/web.php` file:
+
+```php
+use App\Http\Controllers\Astrify\UploadController;
+use App\Http\Controllers\Astrify\SignedUrlController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/upload', [UploadController::class, 'index'])->name('upload.index');
+    Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+    Route::post('/upload/signed-url', SignedUrlController::class)->name('upload.signed-url');
+});
+```
+
+### 4: Configure your S3 Storage
+
+For local development we recommend using [MinIO](https://min.io/) as a self-hosted S3-compatible storage solution. You can run MinIO locally using Docker with the following command:
+
+```bash
+docker run \
+  -p 9000:9000 -p 9001:9001 \
+  -v "$HOME/minio-data:/data" \
+  quay.io/minio/minio server /data --console-address ":9001"
+```
+
+Then login to the console at [http://localhost:9001](http://localhost:9001) using the default credentials (`minioadmin` / `minioadmin`) and create a new bucket called `my-bucket`.
+
+And set the following environment variables in your `.env` file:
+
+```env
+AWS_BUCKET=my-bucket
+AWS_ACCESS_KEY_ID=minioadmin
+AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_SECRET_ACCESS_KEY=minioadmin
+AWS_DEFAULT_REGION=us-east-1
+AWS_URL=http://127.0.0.1:9000/my-bucket
+AWS_ENDPOINT=http://127.0.0.1:9000
+```
+
+Finally navigate to the `/upload` route in your laravel app to test the module.
+
+
+<Alert className="mt-8">
+  <Shield className="h-4 w-4" />
+  <AlertTitle>Note</AlertTitle>
+  <AlertDescription>
+    If you're using an amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
+  </AlertDescription>
+</Alert>
+
+## Usage
+
+### Basic Implementation
+
+```tsx
+import { Upload } from '@/components/astrify/upload/upload';
+
+export default function UploadPage() {
+  return (
+    <div className="container mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-6">Upload Files</h1>
+
+      <Upload
+        config={{
+          signedUrlEndpoint: "/upload/signed-url",
+          maxFiles: 10,
+          maxSize: 10 * 1024 * 1024, // 10MB
+          accept: {
+            "application/pdf": [".pdf"],
+            "image/*": [".png", ".jpeg", ".jpg"],
+          },
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Security Notes
+
+This module is designed to ensure secure file uploads to your S3 bucket. Here’s an overview of the process:
+
+1. **Private bucket configuration:**
+   Your S3 bucket should be configured as **private**. This prevents users from uploading or accessing files directly and ensures all access goes through temporary signed URLs issued by your Laravel application.
+
+2. **Requesting a signed URL:**
+   The client requests a signed URL from the `SignedUrlController`, providing metadata about the file(s) to be uploaded: name, size, type, and SHA256 hash.
+
+3. **Server-side validation:**
+   Before issuing a signed URL, the server validates the provided metadata. If any check fails, the request is denied.
+
+   * File size (must not exceed configured limits)
+   * File type (must match allowed MIME types)
+   * SHA256 hash (used for file integrity verification)
+
+4. **URL generation:**
+   If validation passes, the server returns a signed URL containing the verified metadata.
+
+5. **Upload enforcement:**
+   If the client attempts to upload a file that does not match the metadata encoded in the signed URL, the S3 storage will reject the upload.
+
+6. **Tamper protection:**
+   If the client modifies any claims in the signed URL, the signature becomes invalid and the S3 storage will reject the upload.
+
+
+> **Next Steps:** Try implementing the upload component in your application and customize it to match your specific requirements.
+

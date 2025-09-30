@@ -13,16 +13,13 @@
                 "input",
                 "label",
                 "button",
-                "https://astrify.github.io/react-s3-upload/r/dropzone.json",
-                "https://astrify.github.io/react-s3-upload/r/list.json",
-                "https://astrify.github.io/react-s3-upload/r/errors.json",
-                "https://astrify.github.io/react-s3-upload/r/header.json"
+                "https://astrify.github.io/react-s3-upload/r/upload.json"
             ],
             "files": [
                 {
-                    "path": "resources/js/components/astrify/upload/upload.tsx",
-                    "type": "registry:component",
-                    "target": "resources/js/modules/astrify/upload.tsx"
+                    "path": "resources/js/pages/upload.tsx",
+                    "type": "registry:file",
+                    "target": "resources/js/pages/upload.tsx"
                 },
                 {
                     "path": "app/Http/Controllers/Astrify/UploadController.php",

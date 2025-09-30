@@ -30,11 +30,16 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Astrify') }}</title>
+        <meta inertia name="description" content="Modern shadcn/ui interfaces wired seamlessly to Laravel backends. Install via the shadcn CLI for instant integration and full customization.">
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="Astrify" />
+        <link rel="manifest" href="/favicons/site.webmanifest" />
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

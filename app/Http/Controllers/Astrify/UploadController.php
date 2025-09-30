@@ -6,10 +6,18 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Inertia\Inertia;
+use Inertia\Response;
 
-class DocumentCreateController extends Controller
+class UploadController extends Controller
 {
-    public function __invoke(Request $request): RedirectResponse
+
+    public function index(): Response
+    {
+        return Inertia::render('upload');
+    }
+
+    public function store(Request $request): RedirectResponse
     {
         // Validate the incoming request
         $validated = $request->validate([

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 
-class DocsController extends Controller
+class ModulesController extends Controller
 {
     protected function manifest(): array
     {

@@ -2,6 +2,9 @@ import { TerminalCard } from '@/components/terminal-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Package, Rocket, ShieldCheck, Wrench, Zap } from 'lucide-react';
+import { show as modulesRoute } from '@/routes/modules';
+import { Link } from '@inertiajs/react';
+
 
 export function HeroSection() {
     return (
@@ -21,9 +24,11 @@ export function HeroSection() {
                         </p>
 
                         <div className="mt-8 flex flex-wrap items-center gap-3">
-                            <Button size="lg" className="inline-flex items-center gap-2">
-                                <Package className="h-4 w-4" />
-                                Browse Modules
+                            <Button asChild size="lg" className="inline-flex items-center gap-2">
+                                <Link href={modulesRoute('upload')}>
+                                    <Package className="h-4 w-4" />
+                                    Browse Modules
+                                </Link>
                             </Button>
 
                             <Button asChild variant="outline" size="lg" className="inline-flex items-center gap-2 bg-transparent dark:text-zinc-50">

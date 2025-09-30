@@ -12,6 +12,7 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { defineConfig } from 'vite';
 import { transformers } from './resources/js/lib/highlight-code';
 import inertiaMdxPages from './resources/js/lib/inertia-mdx-pages';
+import { wayfinder } from "@laravel/vite-plugin-wayfinder";
 
 export default defineConfig({
     plugins: [
@@ -22,6 +23,7 @@ export default defineConfig({
         }),
         react(),
         tailwindcss(),
+        wayfinder(),
         // MDX transform so generated pages can import MDX + frontmatter
         mdx({
             remarkPlugins: [remarkGfm, remarkFrontmatter, [remarkMdxFrontmatter, { name: 'frontmatter' }]],

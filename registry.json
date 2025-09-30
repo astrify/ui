@@ -4,7 +4,7 @@
     "homepage": "https://astrify.com",
     "items": [
         {
-            "name": "inertia-upload",
+            "name": "upload",
             "type": "registry:example",
             "title": "Upload with Inertia.js",
             "description": "A complete file upload form example integrated with Laravel Inertia.js, showing form handling, validation, and submission.",
@@ -20,13 +20,14 @@
             ],
             "files": [
                 {
-                    "path": "resources/js/components/astrify/inertia-upload.tsx",
-                    "type": "registry:component"
+                    "path": "resources/js/components/astrify/upload/upload.tsx",
+                    "type": "registry:component",
+                    "target": "resources/js/modules/astrify/upload.tsx"
                 },
                 {
-                    "path": "app/Http/Controllers/Astrify/DocumentCreateController.php",
+                    "path": "app/Http/Controllers/Astrify/UploadController.php",
                     "type": "registry:file",
-                    "target": "app/Http/Controllers/Astrify/DocumentCreateController.php"
+                    "target": "app/Http/Controllers/Astrify/UploadController.php"
                 },
                 {
                     "path": "app/Http/Controllers/Astrify/SignedUrlController.php",
@@ -39,7 +40,7 @@
             },
             "cssVars": {},
             "categories": ["upload", "example", "inertia"],
-            "docs": "Complete file upload module for Inertia.js with Laravel integration.\n\n--------------------------------------------------------------------------\n Installation:\n--------------------------------------------------------------------------\n\n1. Install required Composer dependencies:\n   composer require league/flysystem-aws-s3-v3:^3.0\n\n2. Add the following routes to your routes/web.php file:\n   Route::post('/documents', App\\Http\\Controllers\\Astrify\\DocumentCreateController::class)\n       ->middleware(['auth'])\n       ->name('documents.create');\n   \n   Route::post('/upload/signed-url', App\\Http\\Controllers\\Astrify\\SignedUrlController::class)\n       ->middleware(['auth'])\n       ->name('upload.signed-url');\n\n3. Configure your S3 storage in config/filesystems.php and add these environment variables:\n   # AWS S3 Configuration\n   AWS_ACCESS_KEY_ID=your_access_key\n   AWS_SECRET_ACCESS_KEY=your_secret_key\n   AWS_DEFAULT_REGION=us-east-1\n   AWS_BUCKET=your_bucket_name\n   AWS_URL=https://your-bucket.s3.amazonaws.com\n   \n   # For custom S3-compatible endpoints (like MinIO)\n   AWS_ENDPOINT=https://your-minio-endpoint.com\n   AWS_USE_PATH_STYLE_ENDPOINT=true\n\n4. Set up CORS for your S3 bucket to allow POST requests from your domain.\n\n--------------------------------------------------------------------------\n Local Development with MinIO:\n--------------------------------------------------------------------------\n\nFor local development, you can use MinIO to replicate the S3 API:\n\n**Option 1: Laravel Herd (Recommended)**\nIf using Laravel Herd, MinIO is available as a service:\n1. Start MinIO via Herd's services panel\n2. Access MinIO console at http://localhost:9001 (admin/password)\n3. Create a bucket and configure your .env:\n   AWS_ACCESS_KEY_ID=minioadmin\n   AWS_SECRET_ACCESS_KEY=minioadmin\n   AWS_DEFAULT_REGION=us-east-1\n   AWS_BUCKET=your-local-bucket\n   AWS_ENDPOINT=http://localhost:9000\n   AWS_USE_PATH_STYLE_ENDPOINT=true\n   AWS_URL=http://localhost:9000/your-local-bucket\n\n**Option 2: Docker Container**\nRun MinIO in a Docker container:\ndocker run -p 9000:9000 -p 9001:9001 \\\n  -e MINIO_ROOT_USER=minioadmin \\\n  -e MINIO_ROOT_PASSWORD=minioadmin \\\n  quay.io/minio/minio server /data --console-address \":9001\"\n\n--------------------------------------------------------------------------\n Usage:\n--------------------------------------------------------------------------\n\nimport { InertiaUpload } from '@/components/astrify/inertia-upload';\n\n<InertiaUpload \n  signedUrlEndpoint=\"/upload/signed-url\"\n  submitEndpoint=\"/documents\"\n  maxFiles={5}\n  maxSize={10 * 1024 * 1024} // 10MB\n/>\n\n--------------------------------------------------------------------------\n Security Notes:\n--------------------------------------------------------------------------\n\n• Always validate file uploads on the server side\n• Implement proper access controls for file storage\n• Consider file type restrictions and virus scanning\n• The routes are protected with auth middleware by default\n• Files are stored using SHA-256 hash as the key for deduplication"
+            "docs": "\n--------------------------------------------------------------------------\n Remaining Installation Steps:\n--------------------------------------------------------------------------\n\n1. Install required Composer dependencies:\n   composer require league/flysystem-aws-s3-v3:^3.0\n\n2. Add the following routes to your routes/web.php file:\n   Route::post('/upload', App\\Http\\Controllers\\Astrify\\UploadController::class)\n       ->middleware(['auth'])\n       ->name('upload.store');\n   \n   Route::post('/upload/signed-url', App\\Http\\Controllers\\Astrify\\SignedUrlController::class)\n       ->middleware(['auth'])\n       ->name('upload.signed-url');\n\n3. Configure S3 storage by setting your AWS environment variables (MinIO recomended for local development).\n\n**Note:** You may need to set up CORS for your S3 bucket to allow POST requests from your domain.\n\n--------------------------------------------------------------------------\n Usage:\n--------------------------------------------------------------------------\n\nimport { InertiaUpload } from '@/components/astrify/upload/upload';\n\n<Upload \n  signedUrlEndpoint=\"/upload/signed-url\"\n  submitEndpoint=\"/documents\"\n  maxFiles={5}\n  maxSize={10 * 1024 * 1024} // 10MB\n/>"
         }
     ]
 }

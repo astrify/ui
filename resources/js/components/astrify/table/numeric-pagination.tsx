@@ -23,7 +23,7 @@ interface PaginationLinkType {
     active: boolean
 }
 
-interface PaginatedTableProps {
+interface NumericPaginatedTableProps {
     columns: string[]
     data: (string | number)[][]
     pagination: {
@@ -35,12 +35,11 @@ interface PaginatedTableProps {
     }
 }
 
-// Complex Pagination Table Component
-export function PaginatedTable({
+export default function NumericPagination({
     columns,
     data,
     pagination,
-}: PaginatedTableProps) {
+}: NumericPaginatedTableProps) {
     const { currentPage, lastPage, links, onChangePage } = pagination
 
     return (
@@ -72,7 +71,7 @@ export function PaginatedTable({
                 </TableBody>
             </Table>
 
-            {/* Complex Pagination */}
+            {/* Numeric Pagination */}
             <Pagination className={'justify-start'}>
                 <PaginationContent>
                     {/* "Previous" button */}
@@ -134,81 +133,6 @@ export function PaginatedTable({
                     </PaginationItem>
                 </PaginationContent>
             </Pagination>
-        </div>
-    );
-}
-
-// Simple Pagination Table Component
-export function PaginatedTableSimple({
-    columns,
-    data,
-    pagination,
-}: PaginatedTableProps) {
-    const { currentPage, lastPage, links, onChangePage, total } = pagination
-
-    return (
-        <div className="space-y-4">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        {columns.map((col, idx) => (
-                            <TableHead key={idx}>{col}</TableHead>
-                        ))}
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.length > 0 ? (
-                        data.map((row, rowIndex) => (
-                            <TableRow key={rowIndex}>
-                                {row.map((cell, cellIndex) => (
-                                    <TableCell key={cellIndex}>{cell}</TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="text-center">
-                                No data
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-
-            {/* Simple Pagination */}
-            <div className="flex items-center justify-between pt-4">
-                <div className="text-sm text-muted-foreground">
-                    Page {currentPage} of {lastPage}, showing {data.length} of {total || 0} total
-                </div>
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                if (currentPage <= 1) return;
-                                const prevLink = links.find((l) => l.label.toLowerCase().includes('previous'));
-                                onChangePage(prevLink?.url || null);
-                            }}
-                            className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
-                            size="default"
-                        />
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationNext
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                if (currentPage >= lastPage) return;
-                                const nextLink = links.find((l) => l.label.toLowerCase().includes('next'));
-                                onChangePage(nextLink?.url || null);
-                            }}
-                            className={currentPage >= lastPage ? 'pointer-events-none opacity-50' : ''}
-                            size="default"
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </div>
         </div>
     );
 }

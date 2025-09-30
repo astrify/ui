@@ -9,6 +9,41 @@ import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import type { FormEventHandler } from 'react';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import { type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Upload Example',
+        href: dashboard().url,
+    },
+];
+
+export default function Upload() {
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Upload" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <FileUploadProvider
+                    config={{
+                        signedUrlEndpoint: '/upload/signed-url',
+                        maxFiles: 10,
+                        maxSize: 10 * 1024 * 1024, // 10MB
+                        accept: {
+                            'image/*': ['.png', '.jpeg', '.jpg'],
+                            'application/pdf': ['.pdf'],
+                        },
+                    }}
+                >
+                    <FormContent submitEndpoint={'/documents'} />
+                </FileUploadProvider>
+            </div>
+        </AppLayout>
+    )
+}
+
 
 type UploadForm = {
     name: string;
@@ -21,37 +56,10 @@ type UploadForm = {
     }>;
 };
 
-interface InertiaUploadProps {
-    /**
-     * The endpoint URL for signed storage URLs (e.g., '/upload/signed-url')
-     */
-    signedUrlEndpoint?: string;
-    /**
-     * The form submission endpoint URL (e.g., '/documents')
-     */
-    submitEndpoint?: string;
-    /**
-     * Maximum number of files allowed
-     */
-    maxFiles?: number;
-    /**
-     * Maximum file size in bytes
-     */
-    maxSize?: number;
-    /**
-     * Accepted file types
-     */
-    accept?: string;
-    /**
-     * Additional CSS class for the component
-     */
-    className?: string;
-}
-
 function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string }) {
     const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } = useFileUpload();
 
-    const { data, setData, post, processing, errors, reset } = useForm<UploadForm>({
+    const { data, setData, post, processing, errors, reset, transform } = useForm<UploadForm>({
         name: '',
         uploadedFiles: [],
     });
@@ -62,17 +70,20 @@ function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string
         // Extract only completed files for submission
         const completedFiles = files.filter((f) => f.status === 'complete');
 
-        // Update the form data with completed files
-        const formData = {
-            ...data,
-            uploadedFiles: completedFiles.map((f) => ({
-                id: f.id,
-                name: f.name,
-                sha256: f.sha256,
-                size: f.size,
-                type: f.type,
-            })),
-        };
+        // Prepare the uploaded files data
+        const uploadedFiles = completedFiles.map((f) => ({
+            id: f.id,
+            name: f.name,
+            sha256: f.sha256,
+            size: f.size,
+            type: f.type,
+        }));
+
+        // Transform the form data to include uploaded files and submit
+        transform((formData) => ({
+            ...formData,
+            uploadedFiles,
+        }));
 
         // Submit using Inertia
         post(submitEndpoint, {
@@ -120,31 +131,5 @@ function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string
                 Submit with {files.filter((f) => f.status === 'complete').length} files
             </Button>
         </form>
-    );
-}
-
-export function InertiaUpload({
-    signedUrlEndpoint = '/upload/signed-url',
-    submitEndpoint = '/documents',
-    maxFiles = 10,
-    maxSize = 10 * 1024 * 1024, // 10MB
-    className,
-}: InertiaUploadProps) {
-    return (
-        <div className={className}>
-            <FileUploadProvider
-                config={{
-                    signedUrlEndpoint,
-                    maxFiles,
-                    maxSize,
-                    accept: {
-                        'image/*': ['.png', '.jpeg', '.jpg'],
-                        'application/pdf': ['.pdf'],
-                    },
-                }}
-            >
-                <FormContent submitEndpoint={submitEndpoint} />
-            </FileUploadProvider>
-        </div>
     );
 }

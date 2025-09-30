@@ -1,3 +1,8 @@
+import { Link } from '@inertiajs/react';
+import { show as modulesRoute } from '@/routes/modules';
+import { Package } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 export function Footer() {
     const currentYear = new Date().getFullYear();
 
@@ -6,9 +11,10 @@ export function Footer() {
             <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 text-center sm:flex-row sm:text-left lg:px-8">
                 <p className="text-sm text-muted-foreground">© {currentYear} Astrify UI. All rights reserved.</p>
                 <div className="flex items-center gap-4 text-sm">
-                    <a href="#modules" className="text-muted-foreground hover:text-foreground">
+                    <Link href={modulesRoute('upload')} className="text-muted-foreground hover:text-foreground">
                         Modules
-                    </a>
+                    </Link>
+
                     <a href="#template" className="text-muted-foreground hover:text-foreground">
                         Template
                     </a>

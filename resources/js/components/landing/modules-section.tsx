@@ -1,22 +1,26 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { show as modulesRoute } from '@/routes/modules';
+import { Link } from '@inertiajs/react';
 import {
     Asterisk,
     Boxes,
-    FileInput,
     Hammer,
-    LayoutDashboard,
-    Link,
-    Lock,
-    Mail,
     Plus,
     Table,
     Table2,
     Terminal,
     TextCursorInput,
     UploadCloud,
-    Users,
 } from 'lucide-react';
+
+interface Module {
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+    status: string;
+    docSlug?: string;
+}
 
 const features = [
     {
@@ -36,18 +40,20 @@ const features = [
     },
 ];
 
-const modules = [
+const modules: Module[] = [
     {
         icon: UploadCloud,
         title: 'File Upload with S3',
         description: 'Signed URLs, storage, previews',
         status: 'Available Now',
+        docSlug: 'upload',
     },
     {
         icon: Table,
         title: 'Paginated Tables',
         description: 'Server-side pagination',
         status: 'Available Now',
+        docSlug: 'table',
     },
     {
         icon: TextCursorInput,
@@ -141,28 +147,50 @@ export function ModulesSection() {
 
                             <div className="scrollbar-hide -mx-2 mt-4 overflow-x-auto pb-2">
                                 <div className="flex min-w-max gap-3 px-2">
-                                    {modules.map((module, index) => (
-                                        <div
-                                            key={index}
-                                            className="w-64 shrink-0 rounded-xl bg-white/5 p-4 ring-1 ring-white/10 dark:bg-neutral-900/5 dark:ring-neutral-900/10"
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white dark:bg-neutral-900/10 dark:text-neutral-900">
-                                                    <module.icon className="h-4 w-4" />
-                                                </span>
-                                                <Badge
-                                                    variant={module.status === 'Free' ? 'default' : 'secondary'}
-                                                    className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-neutral-900 dark:bg-neutral-900 dark:text-white"
+                                    {modules.map((module, index) => {
+                                        const cardContent = (
+                                            <>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white dark:bg-neutral-900/10 dark:text-neutral-900">
+                                                        <module.icon className="h-4 w-4" />
+                                                    </span>
+                                                    <Badge
+                                                        variant={module.status === 'Free' ? 'default' : 'secondary'}
+                                                        className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-neutral-900 dark:bg-neutral-900 dark:text-white"
+                                                    >
+                                                        {module.status}
+                                                    </Badge>
+                                                </div>
+                                                <div className="mt-3">
+                                                    <p className="text-sm font-medium">{module.title}</p>
+                                                    <p className="mt-0.5 text-xs text-neutral-300 dark:text-neutral-600">{module.description}</p>
+                                                </div>
+                                            </>
+                                        );
+
+                                        const cardClassName = "w-64 shrink-0 rounded-xl bg-white/5 p-4 ring-1 ring-white/10 dark:bg-neutral-900/5 dark:ring-neutral-900/10";
+
+                                        if (module.docSlug) {
+                                            return (
+                                                <Link
+                                                    key={index}
+                                                    href={modulesRoute(module.docSlug)}
+                                                    className={`${cardClassName} transition-colors hover:bg-white/10 dark:hover:bg-neutral-900/10`}
                                                 >
-                                                    {module.status}
-                                                </Badge>
+                                                    {cardContent}
+                                                </Link>
+                                            );
+                                        }
+
+                                        return (
+                                            <div
+                                                key={index}
+                                                className={cardClassName}
+                                            >
+                                                {cardContent}
                                             </div>
-                                            <div className="mt-3">
-                                                <p className="text-sm font-medium">{module.title}</p>
-                                                <p className="mt-0.5 text-xs text-neutral-300 dark:text-neutral-600">{module.description}</p>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>

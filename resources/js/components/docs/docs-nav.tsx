@@ -1,6 +1,8 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Link, usePage } from '@inertiajs/react';
 import { FileText } from 'lucide-react';
+import { show as modulesRoute } from '@/routes/modules';
+import React from 'react';
 
 interface DocsManifestItem {
     slug: string;
@@ -32,18 +34,17 @@ export function DocsNav({ manifest = [] }: DocsNavProps) {
 
     return (
         <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>Documentation</SidebarGroupLabel>
+            <SidebarGroupLabel>Modules</SidebarGroupLabel>
             <SidebarMenu>
                 {manifest.map((item) => (
                     <SidebarMenuItem key={item.slug}>
                         <SidebarMenuButton
                             asChild
-                            isActive={page.url === `/docs/${item.slug}`}
+                            isActive={page.url === modulesRoute(item.slug).url}
                             tooltip={{ children: item.meta.title }}
                         >
-                            <Link href={`/docs/${item.slug}`} prefetch>
-                                <FileText />
-                                <span>{item.meta.title}</span>
+                            <Link href={modulesRoute(item.slug)} prefetch>
+                                <span>{item.slug}</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

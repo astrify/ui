@@ -4,6 +4,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { DocsTableOfContents } from '@/components/docs/docs-toc';
 import React from 'react';
+import { show as modulesRoute } from '@/routes/modules';
 
 type Props = {
     slug: string;
@@ -43,7 +44,7 @@ export default function DocsLayout({ slug, meta = {}, toc, manifest, children }:
                 <AppSidebarHeader
                     breadcrumbs={[
                         { title: 'Home', href: '/' },
-                        { title: title || 'Post', href: `/docs/${slug}` },
+                        { title: title || 'Post', href: modulesRoute(slug).url },
                     ]}
                 />
                 <div data-slot="docs" className="flex items-stretch text-[1.05rem] sm:text-[15px] xl:w-full">

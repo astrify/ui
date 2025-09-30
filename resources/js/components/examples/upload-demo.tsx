@@ -1,25 +1,22 @@
-import { FileUploadProvider } from '@astrify/react-s3-upload';
+import { FileUploadProvider, UploadLib } from '@astrify/react-s3-upload';
 import { Dropzone } from '@/components/astrify/upload/dropzone';
 import { Errors } from '@/components/astrify/upload/errors';
 import { Header } from '@/components/astrify/upload/header';
 import { List } from '@/components/astrify/upload/list';
 import {
     createUploadSuccessFake,
-    createUploadFailureFake,
-    createUploadValidationErrorFake,
 } from '@/lib/upload-fakes';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Component that composes all file upload components
-function FileUploadSystem({ uploadLib = createUploadSuccessFake(), title, description }: {
-    uploadLib?: any;
+function FileUploadSystem({ uploadLib = createUploadSuccessFake() }: {
+    uploadLib?: UploadLib;
     title: string;
     description: string;
 }) {
     return (
         <FileUploadProvider
             config={{
-                maxFiles: 10,
+                maxFiles: 1,
                 maxSize: 50 * 1024 * 1024, // 50MB
                 signedUrlEndpoint: "/upload/signed-url",
                 uploadLib,
@@ -103,5 +100,3 @@ export function UploadDemo() {
         </div>
     );
 }`;
-
-

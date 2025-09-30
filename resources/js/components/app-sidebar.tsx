@@ -1,20 +1,11 @@
 import { DocsNav } from '@/components/docs/docs-nav';
 import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem, type SharedData } from '@/types';
+import { type NavItem, type SharedData, type DocsManifest } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, Github, GithubIcon, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
 
 const footerNavItems: NavItem[] = [
     {
@@ -25,22 +16,7 @@ const footerNavItems: NavItem[] = [
 ];
 
 interface AppSidebarProps {
-    docsManifest?: Array<{
-        slug: string;
-        meta: {
-            title: string;
-            description?: string;
-            date?: string;
-            author?: string;
-            tags?: string[];
-            readingTime?: number;
-        };
-        toc?: Array<{
-            title: string;
-            url: string;
-            depth: number;
-        }> | null;
-    }>;
+    docsManifest?: DocsManifest;
 }
 
 export function AppSidebar({ docsManifest }: AppSidebarProps = {}) {
@@ -61,7 +37,6 @@ export function AppSidebar({ docsManifest }: AppSidebarProps = {}) {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
                 {docsManifest && <DocsNav manifest={docsManifest} />}
             </SidebarContent>
 

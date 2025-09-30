@@ -3,33 +3,15 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { DocsTableOfContents } from '@/components/docs/docs-toc';
+import { type DocsManifest, type DocsTableOfContentsItem } from '@/types';
 import React from 'react';
 import { show as modulesRoute } from '@/routes/modules';
 
 type Props = {
     slug: string;
     meta?: Record<string, unknown>;
-    toc?: Array<{
-        title: string;
-        url: string;
-        depth: number;
-    }> | null;
-    manifest?: Array<{
-        slug: string;
-        meta: {
-            title: string;
-            description?: string;
-            date?: string;
-            author?: string;
-            tags?: string[];
-            readingTime?: number;
-        };
-        toc?: Array<{
-            title: string;
-            url: string;
-            depth: number;
-        }> | null;
-    }>;
+    toc?: DocsTableOfContentsItem[] | null;
+    manifest?: DocsManifest;
     children: React.ReactNode;
 };
 

@@ -30,6 +30,29 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+export interface DocsTableOfContentsItem {
+    title: string;
+    url: string;
+    depth: number;
+}
+
+export interface DocsManifestItemMeta {
+    title: string;
+    description?: string;
+    date?: string;
+    label?: string;
+    tags?: string[];
+    category?: string;
+}
+
+export interface DocsManifestItem {
+    slug: string;
+    meta: DocsManifestItemMeta;
+    toc?: DocsTableOfContentsItem[] | null;
+}
+
+export type DocsManifest = DocsManifestItem[];
+
 export interface User {
     id: number;
     name: string;

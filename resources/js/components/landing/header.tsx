@@ -5,7 +5,7 @@ import { Asterisk, Github, Moon, Package, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { Link } from '@inertiajs/react';
-import { show as modulesRoute } from '@/routes/modules';
+import { show as docsRoute } from '@/routes/docs';
 
 export function Header() {
     const [isDark, setIsDark] = useState(false);
@@ -35,7 +35,7 @@ export function Header() {
                 </a>
 
                 <div className="hidden items-center gap-8 md:flex">
-                    <Link href={modulesRoute('upload')} className="text-sm font-medium text-muted-foreground hover:text-foreground">
+                    <Link href={docsRoute('upload')} className="text-sm font-medium text-muted-foreground hover:text-foreground">
                         Modules
                     </Link>
 

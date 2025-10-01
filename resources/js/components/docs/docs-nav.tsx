@@ -1,6 +1,6 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Link, usePage } from '@inertiajs/react';
-import { show as modulesRoute } from '@/routes/modules';
+import { show as docsRoute } from '@/routes/docs';
 import { type DocsManifest } from '@/types';
 import React from 'react';
 
@@ -23,6 +23,15 @@ export function DocsNav({ manifest = [] }: DocsNavProps) {
             return acc;
         }, {} as Record<string, typeof manifest>);
 
+    // Sort items alphabetically by label within each category
+    Object.keys(categorizedItems).forEach((category) => {
+        categorizedItems[category].sort((a, b) => {
+            const labelA = (a.meta.label || a.slug).toLowerCase();
+            const labelB = (b.meta.label || b.slug).toLowerCase();
+            return labelA.localeCompare(labelB);
+        });
+    });
+
     const categories = Object.keys(categorizedItems);
 
     if (!categories.length) {
@@ -39,10 +48,10 @@ export function DocsNav({ manifest = [] }: DocsNavProps) {
                             <SidebarMenuItem key={item.slug}>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={page.url === modulesRoute(item.slug).url}
+                                    isActive={page.url === docsRoute(item.slug).url}
                                     tooltip={{ children: item.meta.title }}
                                 >
-                                    <Link href={modulesRoute(item.slug)} prefetch>
+                                    <Link href={docsRoute(item.slug)} prefetch>
                                         <span>{item.meta.label || item.slug}</span>
                                     </Link>
                                 </SidebarMenuButton>

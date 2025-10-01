@@ -5,7 +5,7 @@ import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { DocsTableOfContents } from '@/components/docs/docs-toc';
 import { type DocsManifest, type DocsTableOfContentsItem } from '@/types';
 import React from 'react';
-import { show as modulesRoute } from '@/routes/modules';
+import { show as docsRoute } from '@/routes/docs';
 
 type Props = {
     slug: string;
@@ -17,7 +17,7 @@ type Props = {
 
 export default function DocsLayout({ slug, meta = {}, toc, manifest, children }: Props) {
     const title = (meta.title as string) ?? slug.split('/').pop();
-    const description = (meta.description as string) ?? '';
+    const label = (meta.label as string) ?? '';
 
     return (
         <AppShell variant="sidebar">
@@ -26,7 +26,7 @@ export default function DocsLayout({ slug, meta = {}, toc, manifest, children }:
                 <AppSidebarHeader
                     breadcrumbs={[
                         { title: 'Home', href: '/' },
-                        { title: title || 'Post', href: modulesRoute(slug).url },
+                        { title: label || 'Post', href: docsRoute(slug).url },
                     ]}
                 />
                 <div data-slot="docs" className="flex items-stretch text-[1.05rem] sm:text-[15px] xl:w-full">
@@ -71,7 +71,6 @@ export default function DocsLayout({ slug, meta = {}, toc, manifest, children }:
                                   )}*/}
                                         </div>
                                     </div>
-                                    {description && <p className="text-[1.05rem] text-balance text-muted-foreground sm:text-base">{description}</p>}
                                 </div>
                                 {/*{links ? (*/}
                                 {/*    <div className="flex items-center space-x-2 pt-4">*/}

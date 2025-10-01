@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 
-class ModulesController extends Controller
+class DocsController extends Controller
 {
     protected function manifest(): array
     {
@@ -23,7 +23,7 @@ class ModulesController extends Controller
         if (!$entry) abort(404);
 
         // Render the generated page file
-        return Inertia::render('docs/posts/'.$slug, [
+        return Inertia::render('docs/'.$slug, [
             'slug' => $slug,
             'meta' => $entry['meta'] ?? [],
             'toc' => $entry['toc'] ?? null,

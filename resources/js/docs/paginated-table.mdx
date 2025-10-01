@@ -1,0 +1,296 @@
+---
+title: Paginated Tables Module
+description: A complete paginated table solution integrated with Laravel Inertia.js, featuring numeric and simple pagination styles with seamless backend integration.
+date: 2025-09-30
+label: Paginated Table
+tags: [table, pagination, inertia, laravel, component]
+category: Modules
+---
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Table, ListOrdered, Database, Zap } from 'lucide-react';
+import { TableDemo, TableDemoSource } from "@/components/examples/table-demo"
+import { SimpleTableDemo, SimpleTableDemoSource } from "@/components/examples/simple-table-demo"
+
+This module wires up the [Shadcn/UI Table](https://ui.shadcn.com/docs/components/table) components with Laravel's default paginator. Two examples are provided, the first uses inertia as the data source and the second loads data as json via fetch.
+
+## Inertia with Numeric Pagination
+This example loads it's data via Inertia requests and shows numbered page controls. As you paginate this table the page number is reflected in the address bar.
+
+<ComponentPreview
+  component={<TableDemo />}
+  code={TableDemoSource}
+  title="inertia-table-example.tsx"
+  language="tsx"
+/>
+
+## JSON data with Simple Pagination
+
+This example uses JSON for it's data instead of Inertia requests and uses minimal previous/next navigation. Useful when you need multiple tables on a single page or don't want to tie the pagination to the rest of the page.
+
+<ComponentPreview
+  component={<SimpleTableDemo />}
+  code={SimpleTableDemoSource}
+  title="json-table-example.tsx"
+  language="tsx"
+/>
+
+## Installation Steps
+
+This module is designed to be installed into applications derived from the official Laravel React starter kit. For more information please read the <a href="/docs/introduction" className="underline">Introduction page</a>.
+
+### 1: Install the Module
+
+You can install the table module using the shadcn registry system:
+
+```bash
+npx shadcn@latest add https://astrify.github.io/table.json
+```
+
+In addition to installing the necessary JS dependencies, this command installs the following files into your application:
+
+```bash
+app/
+└── Http/
+    └── Controllers/
+        └── Astrify/
+            └── TableController.php
+resources/
+└── js/
+    └── pages/
+        └── table.tsx
+```
+
+### 2: Configure Routes
+
+Add the following route to your `routes/web.php` file:
+
+```php
+use App\Http\Controllers\Astrify\TableController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/table', [TableController::class, 'index'])->name('table.index');
+});
+```
+
+### 3: Seed Sample Data (Optional)
+
+To quickly test the table component with sample data, you can seed your database with users:
+
+```bash
+php artisan tinker
+User::factory()->count(50)->create();
+```
+
+Finally, navigate to the `/table` route in your Laravel app to test the module.
+
+<Alert className="mt-8">
+  <Database className="h-4 w-4" />
+  <AlertTitle>Note</AlertTitle>
+  <AlertDescription>
+    The table components work seamlessly with Laravel's built-in pagination. Simply pass the paginated data from your controller to your Inertia component.
+  </AlertDescription>
+</Alert>
+
+## Usage
+
+### Basic Implementation (Numeric Pagination)
+
+```tsx
+import { router } from '@inertiajs/react';
+import PaginatedTable from '@/components/astrify/table/paginated-table';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  created_at: string;
+}
+
+interface Props {
+  users: {
+    data: User[];
+    current_page: number;
+    last_page: number;
+    total: number;
+    links: Array<{
+      url: string | null;
+      label: string;
+      active: boolean;
+    }>;
+  };
+}
+
+export default function UsersPage({ users }: Props) {
+  const handlePageChange = (url: string | null) => {
+    if (!url) return;
+    router.get(url, {}, { preserveScroll: true, preserveState: true });
+  };
+
+  return (
+    <div className="container mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-6">Users</h1>
+
+      <PaginatedTable
+        columns={['ID', 'Name', 'Email', 'Created']}
+        data={users.data.map((user) => [
+          user.id,
+          user.name,
+          user.email,
+          user.created_at,
+        ])}
+        pagination={{
+          type: "numeric",
+          currentPage: users.current_page,
+          lastPage: users.last_page,
+          links: users.links,
+          onChangePage: handlePageChange,
+          total: users.total,
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Simple Pagination Implementation
+
+For datasets where you don't need numbered page links, set the `type` prop to `"simple"`:
+
+```tsx
+import PaginatedTable from '@/components/astrify/table/paginated-table';
+
+// ... same Props interface as above
+
+export default function UsersPage({ users }: Props) {
+  const handlePageChange = (url: string | null) => {
+    if (!url) return;
+    router.get(url, {}, { preserveScroll: true, preserveState: true });
+  };
+
+  return (
+    <div className="container mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-6">Users</h1>
+
+      <PaginatedTable
+        columns={['ID', 'Name', 'Email', 'Created']}
+        data={users.data.map((user) => [
+          user.id,
+          user.name,
+          user.email,
+          user.created_at,
+        ])}
+        pagination={{
+          type: "simple",
+          currentPage: users.current_page,
+          lastPage: users.last_page,
+          links: users.links,
+          onChangePage: handlePageChange,
+          total: users.total,
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Backend Implementation
+
+The table components work seamlessly with Laravel's pagination. Here's a typical controller implementation:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class UsersController extends Controller
+{
+    public function index(): Response
+    {
+        $users = User::select('id', 'name', 'email', 'created_at')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+        return Inertia::render('users/index', [
+            'users' => $users,
+        ]);
+    }
+}
+```
+
+Laravel's paginator automatically provides all the necessary pagination metadata including:
+- `data`: Array of current page results
+- `current_page`: Current page number
+- `last_page`: Total number of pages
+- `total`: Total number of records
+- `links`: Array of pagination links
+
+## Features
+
+<div className="grid gap-4 md:grid-cols-2 mt-8">
+  <Card>
+    <CardHeader>
+      <ListOrdered className="h-6 w-6 mb-2" />
+      <CardTitle>Numeric Pagination</CardTitle>
+      <CardDescription>
+        Jump directly to any page with numbered links and ellipsis for large datasets
+      </CardDescription>
+    </CardHeader>
+  </Card>
+
+  <Card>
+    <CardHeader>
+      <Zap className="h-6 w-6 mb-2" />
+      <CardTitle>Simple Pagination</CardTitle>
+      <CardDescription>
+        Lightweight previous/next navigation perfect for mobile or simpler interfaces
+      </CardDescription>
+    </CardHeader>
+  </Card>
+
+  <Card>
+    <CardHeader>
+      <Database className="h-6 w-6 mb-2" />
+      <CardTitle>Laravel Integration</CardTitle>
+      <CardDescription>
+        Works seamlessly with Laravel's built-in Eloquent pagination
+      </CardDescription>
+    </CardHeader>
+  </Card>
+
+  <Card>
+    <CardHeader>
+      <Table className="h-6 w-6 mb-2" />
+      <CardTitle>Preserve State</CardTitle>
+      <CardDescription>
+        Uses Inertia.js features to preserve scroll position and component state during navigation
+      </CardDescription>
+    </CardHeader>
+  </Card>
+</div>
+
+## Component Props
+
+### PaginatedTable
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `columns` | `string[]` | Array of column header labels |
+| `data` | `(string \| number)[][]` | 2D array of table data rows |
+| `pagination.type` | `"simple" \| "numeric"` | The pagination style to use |
+| `pagination.currentPage` | `number` | Current page number |
+| `pagination.lastPage` | `number` | Total number of pages |
+| `pagination.links` | `PaginationLinkType[]` | Array of pagination link objects from Laravel |
+| `pagination.onChangePage` | `(url: string \| null) => void` | Callback function when page changes |
+| `pagination.total` | `number` (optional) | Total number of records |
+
+> **Next Steps:** Try implementing the table component with your own models and customize the columns and data display to match your requirements.
+

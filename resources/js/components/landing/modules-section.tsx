@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { show as modulesRoute } from '@/routes/modules';
+import { show as docsRoute } from '@/routes/docs';
 import { Link } from '@inertiajs/react';
 import {
     Asterisk,
@@ -174,7 +174,7 @@ export function ModulesSection() {
                                             return (
                                                 <Link
                                                     key={index}
-                                                    href={modulesRoute(module.docSlug)}
+                                                    href={docsRoute(module.docSlug)}
                                                     className={`${cardClassName} transition-colors hover:bg-white/10 dark:hover:bg-neutral-900/10`}
                                                 >
                                                     {cardContent}

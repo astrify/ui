@@ -35,22 +35,6 @@ class UploadController extends Controller
             'uploaded_files' => $validated['uploadedFiles'],
         ]);
 
-        // Process the uploaded files
-        //        DB::transaction(function () use ($validated, $request) {
-        //            // Create documents for each uploaded file
-        //            foreach ($validated['uploadedFiles'] as $file) {
-        //                Document::create([
-        //                    'user_id' => $request->user()->id,
-        //                    'name' => $file['name'],
-        //                    'file_name' => $file['name'],
-        //                    'file_url' => $file['url'],
-        //                    'file_sha256' => $file['sha256'],
-        //                    'file_size' => $file['size'],
-        //                    'mime_type' => $file['type'],
-        //                ]);
-        //            }
-        //        });
-
         return back()->with('success', 'Files uploaded successfully');
     }
 }

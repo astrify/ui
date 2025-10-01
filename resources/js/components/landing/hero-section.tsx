@@ -2,7 +2,7 @@ import { TerminalCard } from '@/components/terminal-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Package, Rocket, ShieldCheck, Wrench, Zap } from 'lucide-react';
-import { show as modulesRoute } from '@/routes/modules';
+import { show as docsRoute } from '@/routes/docs';
 import { Link } from '@inertiajs/react';
 
 
@@ -25,7 +25,7 @@ export function HeroSection() {
 
                         <div className="mt-8 flex flex-wrap items-center gap-3">
                             <Button asChild size="lg" className="inline-flex items-center gap-2">
-                                <Link href={modulesRoute('upload')}>
+                                <Link href={docsRoute('upload')}>
                                     <Package className="h-4 w-4" />
                                     Browse Modules
                                 </Link>

@@ -8,7 +8,7 @@ export default function Welcome() {
     return (
         <HomeLayout>
             <Head title="Confirm password">
-                <meta inertia name="description" content="Modern shadcn/ui interfaces wired seamlessly to Laravel backends. Install via the shadcn CLI for instant integration and full customization." />
+                <meta name="description" content="sssss" />
             </Head>
 
             <HeroSection />

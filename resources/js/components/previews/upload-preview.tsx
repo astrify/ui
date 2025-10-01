@@ -1,24 +1,18 @@
-import { FileUploadProvider, UploadLib, useFileUpload } from '@astrify/react-s3-upload';
 import { Dropzone } from '@/components/astrify/upload/dropzone';
 import { Errors } from '@/components/astrify/upload/errors';
 import { Header } from '@/components/astrify/upload/header';
 import { List } from '@/components/astrify/upload/list';
-import {
-    createUploadSuccessFake,
-} from '@/lib/upload-fakes';
+import { createUploadSuccessFake } from '@/lib/upload-fakes';
+import { FileUploadProvider, UploadLib, useFileUpload } from '@astrify/react-s3-upload';
 
 // Component that composes all file upload components
-function FileUploadSystem({ uploadLib = createUploadSuccessFake() }: {
-    uploadLib?: UploadLib;
-    title: string;
-    description: string;
-}) {
+function FileUploadSystem({ uploadLib = createUploadSuccessFake() }: { uploadLib?: UploadLib; title: string; description: string }) {
     return (
         <FileUploadProvider
             config={{
                 maxFiles: 2,
                 maxSize: 50 * 1024 * 1024, // 50MB
-                signedUrlEndpoint: "/upload/signed-url",
+                signedUrlEndpoint: '/upload/signed-url',
                 uploadLib,
             }}
         >
@@ -32,7 +26,7 @@ function FileUploadSystem({ uploadLib = createUploadSuccessFake() }: {
     );
 }
 
-export function UploadDemo() {
+export function UploadPreview() {
     return (
         <div className="grid w-full max-w-4xl items-start gap-6">
             <FileUploadSystem
@@ -45,19 +39,17 @@ export function UploadDemo() {
 }
 
 // Component for single image upload with preview
-function ImageUploadSystem({ uploadLib = createUploadSuccessFake() }: {
-    uploadLib?: UploadLib;
-}) {
+function ImageUploadSystem({ uploadLib = createUploadSuccessFake() }: { uploadLib?: UploadLib }) {
     return (
         <FileUploadProvider
             config={{
                 maxFiles: 1,
                 maxSize: 10 * 1024 * 1024, // 10MB
-                signedUrlEndpoint: "/upload/signed-url",
+                signedUrlEndpoint: '/upload/signed-url',
                 uploadLib,
                 accept: {
-                    "image/*": [".png", ".jpeg", ".jpg", ".gif", ".webp"]
-                }
+                    'image/*': ['.png', '.jpeg', '.jpg', '.gif', '.webp'],
+                },
             }}
         >
             <ImageUploadContent />
@@ -81,14 +73,12 @@ function ImageUploadContent() {
 export function ImageUploadDemo() {
     return (
         <div className="w-full max-w-md">
-            <ImageUploadSystem
-                uploadLib={createUploadSuccessFake()}
-            />
+            <ImageUploadSystem uploadLib={createUploadSuccessFake()} />
         </div>
     );
 }
 
-export const UploadDemoSource = `import { FileUploadProvider } from '@astrify/react-s3-upload';
+export const UploadPreviewSource = `import { FileUploadProvider } from '@astrify/react-s3-upload';
 import { Dropzone } from '@/components/astrify/upload/dropzone';
 import { Errors } from '@/components/astrify/upload/errors';
 import { Header } from '@/components/astrify/upload/header';

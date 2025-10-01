@@ -6,19 +6,20 @@ import { getIconForLanguageExtension } from '@/components/docs/icons';
 import { highlightCode } from '@/lib/highlight-code';
 import { cn } from '@/lib/utils';
 
-export function ComponentSource({
-    code,
+export function ComponentSourceChild({
+    children,
     title,
     language = 'tsx',
     collapsible = true,
     className,
 }: React.ComponentProps<'div'> & {
-    code: string;
+    children: string;
     title?: string;
     language?: string;
     collapsible?: boolean;
 }) {
     const [highlightedCode, setHighlightedCode] = React.useState<string>('');
+    const code = children;
 
     React.useEffect(() => {
         const highlight = async () => {

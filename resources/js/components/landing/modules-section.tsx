@@ -2,17 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { show as docsRoute } from '@/routes/docs';
 import { Link } from '@inertiajs/react';
-import {
-    Asterisk,
-    Boxes,
-    Hammer,
-    Plus,
-    Table,
-    Table2,
-    Terminal,
-    TextCursorInput,
-    UploadCloud,
-} from 'lucide-react';
+import { Asterisk, Boxes, Hammer, Plus, Table, Table2, Terminal, TextCursorInput, UploadCloud } from 'lucide-react';
 
 interface Module {
     icon: React.ComponentType<{ className?: string }>;
@@ -168,7 +158,8 @@ export function ModulesSection() {
                                             </>
                                         );
 
-                                        const cardClassName = "w-64 shrink-0 rounded-xl bg-white/5 p-4 ring-1 ring-white/10 dark:bg-neutral-900/5 dark:ring-neutral-900/10";
+                                        const cardClassName =
+                                            'w-64 shrink-0 rounded-xl bg-white/5 p-4 ring-1 ring-white/10 dark:bg-neutral-900/5 dark:ring-neutral-900/10';
 
                                         if (module.docSlug) {
                                             return (
@@ -183,10 +174,7 @@ export function ModulesSection() {
                                         }
 
                                         return (
-                                            <div
-                                                key={index}
-                                                className={cardClassName}
-                                            >
+                                            <div key={index} className={cardClassName}>
                                                 {cardContent}
                                             </div>
                                         );

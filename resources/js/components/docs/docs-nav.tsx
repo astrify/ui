@@ -1,8 +1,7 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { Link, usePage } from '@inertiajs/react';
 import { show as docsRoute } from '@/routes/docs';
 import { type DocsManifest } from '@/types';
-import React from 'react';
+import { Link, usePage } from '@inertiajs/react';
 
 interface DocsNavProps {
     manifest: DocsManifest;
@@ -14,14 +13,17 @@ export function DocsNav({ manifest = [] }: DocsNavProps) {
     // Filter out items without category and group by category
     const categorizedItems = manifest
         .filter((item) => item.meta.category)
-        .reduce((acc, item) => {
-            const category = item.meta.category!;
-            if (!acc[category]) {
-                acc[category] = [];
-            }
-            acc[category].push(item);
-            return acc;
-        }, {} as Record<string, typeof manifest>);
+        .reduce(
+            (acc, item) => {
+                const category = item.meta.category!;
+                if (!acc[category]) {
+                    acc[category] = [];
+                }
+                acc[category].push(item);
+                return acc;
+            },
+            {} as Record<string, typeof manifest>,
+        );
 
     // Sort items alphabetically by label within each category
     Object.keys(categorizedItems).forEach((category) => {
@@ -46,11 +48,7 @@ export function DocsNav({ manifest = [] }: DocsNavProps) {
                     <SidebarMenu>
                         {categorizedItems[category].map((item) => (
                             <SidebarMenuItem key={item.slug}>
-                                <SidebarMenuButton
-                                    asChild
-                                    isActive={page.url === docsRoute(item.slug).url}
-                                    tooltip={{ children: item.meta.title }}
-                                >
+                                <SidebarMenuButton asChild isActive={page.url === docsRoute(item.slug).url} tooltip={{ children: item.meta.title }}>
                                     <Link href={docsRoute(item.slug)} prefetch>
                                         <span>{item.meta.label || item.slug}</span>
                                     </Link>
@@ -63,5 +61,3 @@ export function DocsNav({ manifest = [] }: DocsNavProps) {
         </>
     );
 }
-
-

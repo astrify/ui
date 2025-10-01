@@ -3,9 +3,9 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { DocsTableOfContents } from '@/components/docs/docs-toc';
+import { show as docsRoute } from '@/routes/docs';
 import { type DocsManifest, type DocsTableOfContentsItem } from '@/types';
 import React from 'react';
-import { show as docsRoute } from '@/routes/docs';
 
 type Props = {
     slug: string;

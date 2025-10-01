@@ -1,18 +1,17 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Dropzone } from '@/components/astrify/upload/dropzone';
 import { Errors } from '@/components/astrify/upload/errors';
 import { Header } from '@/components/astrify/upload/header';
 import { List } from '@/components/astrify/upload/list';
-import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
-import { useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import type { FormEventHandler } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import type { FormEventHandler } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -41,9 +40,8 @@ export default function Upload() {
                 </FileUploadProvider>
             </div>
         </AppLayout>
-    )
+    );
 }
-
 
 type UploadForm = {
     name: string;

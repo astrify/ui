@@ -7,6 +7,7 @@ import { CodeCollapsibleWrapper } from '@/components/docs/code-collapsible-wrapp
 import { CodeTabs } from '@/components/docs/code-tabs';
 import { ComponentPreview } from '@/components/docs/component-preview';
 import { ComponentSource } from '@/components/docs/component-source';
+import { ComponentSourceChild } from '@/components/docs/component-source-child';
 import { CopyButton } from '@/components/docs/copy-button';
 import { getIconForLanguageExtension } from '@/components/docs/icons';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -227,6 +228,7 @@ export const mdxComponents = {
     CodeTabs,
     ComponentPreview,
     ComponentSource,
+    ComponentSourceChild,
     CodeBlockCommand,
     CodeCollapsibleWrapper,
     Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (

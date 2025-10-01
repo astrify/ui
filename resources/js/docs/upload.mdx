@@ -13,29 +13,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Upload, FileText, Cloud, Shield, Zap } from 'lucide-react';
-import { UploadDemo, UploadDemoSource, ImageUploadDemo, ImageUploadDemoSource } from "@/components/examples/upload-demo"
-
+import { UploadPreview, UploadPreviewSource, ImageUploadDemo, ImageUploadDemoSource } from '@/components/previews/upload-preview';
 
 ## Multi-file Upload
+
 Upload multiple files with drag & drop support, progress tracking, and error handling.
 
-<ComponentPreview
-  component={<UploadDemo />}
-  code={UploadDemoSource}
-  title="upload-demo.tsx"
-  language="tsx"
-/>
+<ComponentPreview component={<UploadPreview />} code={UploadPreviewSource} title="upload-demo.tsx" language="tsx" />
 
 ## Single Image Upload
 
 Upload a single image file with preview and validation.
 
-<ComponentPreview
-  component={<ImageUploadDemo />}
-  code={ImageUploadDemoSource}
-  title="image-upload-demo.tsx"
-  language="tsx"
-/>
+<ComponentPreview component={<ImageUploadDemo />} code={ImageUploadDemoSource} title="image-upload-demo.tsx" language="tsx" />
 
 ## Installation Steps
 
@@ -114,13 +104,12 @@ AWS_ENDPOINT=http://127.0.0.1:9000
 
 Finally navigate to the `/upload` route in your laravel app to test the module.
 
-
 <Alert className="mt-8">
-  <Shield className="h-4 w-4" />
-  <AlertTitle>Note</AlertTitle>
-  <AlertDescription>
-    If you're using an amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
-  </AlertDescription>
+    <Shield className="h-4 w-4" />
+    <AlertTitle>Note</AlertTitle>
+    <AlertDescription>
+        If you're using an amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
+    </AlertDescription>
 </Alert>
 
 ## Usage
@@ -131,23 +120,23 @@ Finally navigate to the `/upload` route in your laravel app to test the module.
 import { Upload } from '@/components/astrify/upload/upload';
 
 export default function UploadPage() {
-  return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Upload Files</h1>
+    return (
+        <div className="container mx-auto py-8">
+            <h1 className="mb-6 text-2xl font-bold">Upload Files</h1>
 
-      <Upload
-        config={{
-          signedUrlEndpoint: "/upload/signed-url",
-          maxFiles: 10,
-          maxSize: 10 * 1024 * 1024, // 10MB
-          accept: {
-            "application/pdf": [".pdf"],
-            "image/*": [".png", ".jpeg", ".jpg"],
-          },
-        }}
-      />
-    </div>
-  );
+            <Upload
+                config={{
+                    signedUrlEndpoint: '/upload/signed-url',
+                    maxFiles: 10,
+                    maxSize: 10 * 1024 * 1024, // 10MB
+                    accept: {
+                        'application/pdf': ['.pdf'],
+                        'image/*': ['.png', '.jpeg', '.jpg'],
+                    },
+                }}
+            />
+        </div>
+    );
 }
 ```
 
@@ -163,10 +152,9 @@ This module is designed to ensure secure file uploads to your S3 bucket. Here’
 
 3. **Server-side validation:**
    Before issuing a signed URL, the server validates the provided metadata. If any check fails, the request is denied.
-
-   * File size (must not exceed configured limits)
-   * File type (must match allowed MIME types)
-   * SHA256 hash (used for file integrity verification)
+    - File size (must not exceed configured limits)
+    - File type (must match allowed MIME types)
+    - SHA256 hash (used for file integrity verification)
 
 4. **URL generation:**
    If validation passes, the server returns a signed URL containing the verified metadata.
@@ -177,6 +165,4 @@ This module is designed to ensure secure file uploads to your S3 bucket. Here’
 6. **Tamper protection:**
    If the client modifies any claims in the signed URL, the signature becomes invalid and the S3 storage will reject the upload.
 
-
 > **Next Steps:** Try implementing the upload component in your application and customize it to match your specific requirements.
-

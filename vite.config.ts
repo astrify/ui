@@ -1,3 +1,4 @@
+import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import mdx from '@mdx-js/rollup';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
@@ -12,7 +13,6 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { defineConfig } from 'vite';
 import { transformers } from './resources/js/lib/highlight-code';
 import inertiaMdxPages from './resources/js/lib/inertia-mdx-pages';
-import { wayfinder } from "@laravel/vite-plugin-wayfinder";
 
 export default defineConfig({
     plugins: [

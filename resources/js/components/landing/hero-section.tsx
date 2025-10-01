@@ -1,10 +1,9 @@
 import { TerminalCard } from '@/components/terminal-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Package, Rocket, ShieldCheck, Wrench, Zap } from 'lucide-react';
 import { show as docsRoute } from '@/routes/docs';
 import { Link } from '@inertiajs/react';
-
+import { Clock, Package, Rocket, ShieldCheck, Wrench, Zap } from 'lucide-react';
 
 export function HeroSection() {
     return (

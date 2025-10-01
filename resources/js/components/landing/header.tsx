@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Asterisk, Github, Moon, Package, Sun } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { Link } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
 import { show as docsRoute } from '@/routes/docs';
+import { Link } from '@inertiajs/react';
+import { Github, Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function Header() {
     const [isDark, setIsDark] = useState(false);

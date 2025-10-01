@@ -1,58 +1,50 @@
-import React from "react"
 import {
     Pagination,
     PaginationContent,
+    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
-    PaginationPrevious,
     PaginationNext,
-    PaginationEllipsis,
-} from "@/components/ui/pagination"
+    PaginationPrevious,
+} from '@/components/ui/pagination';
+import React from 'react';
 
-export type PaginationType = "simple" | "numeric"
+export type PaginationType = 'simple' | 'numeric';
 
 interface PaginationLinkType {
-    url: string | null
-    label: string
-    active: boolean
+    url: string | null;
+    label: string;
+    active: boolean;
 }
 
 interface PaginatorProps {
-    type: PaginationType
-    currentPage: number
-    lastPage: number
-    links: PaginationLinkType[]
-    onChangePage: (url: string | null) => void
-    total?: number
-    currentPageSize?: number
+    type: PaginationType;
+    currentPage: number;
+    lastPage: number;
+    links: PaginationLinkType[];
+    onChangePage: (url: string | null) => void;
+    total?: number;
+    currentPageSize?: number;
 }
 
-export default function Paginator({
-    type,
-    currentPage,
-    lastPage,
-    links,
-    onChangePage,
-    total,
-    currentPageSize,
-}: PaginatorProps) {
+export default function Paginator({ type, currentPage, lastPage, links, onChangePage, total, currentPageSize }: PaginatorProps) {
     const handlePageClick = (e: React.MouseEvent, url: string | null) => {
-        e.preventDefault()
-        if (url) onChangePage(url)
-    }
+        e.preventDefault();
+        if (url) onChangePage(url);
+    };
 
-    const prevLink = links.find((l) => l.label.toLowerCase().includes('previous'))
-    const nextLink = links.find((l) => l.label.toLowerCase().includes('next'))
+    const prevLink = links.find((l) => l.label.toLowerCase().includes('previous'));
+    const nextLink = links.find((l) => l.label.toLowerCase().includes('next'));
 
-    const isPrevDisabled = currentPage <= 1
-    const isNextDisabled = currentPage >= lastPage
+    const isPrevDisabled = currentPage <= 1;
+    const isNextDisabled = currentPage >= lastPage;
 
-    if (type === "simple") {
-        const totalRecords = total || 0
-        const itemsOnPage = currentPageSize || 0
-        const perPage = Math.ceil(totalRecords / lastPage)
-        const from = totalRecords > 0 && itemsOnPage > 0 ? (currentPage - 1) * perPage + 1 : 0
-        const to = from > 0 ? from + itemsOnPage - 1 : 0
+    if (type === 'simple') {
+        const totalRecords = total || 0;
+        const itemsOnPage = currentPageSize || 0;
+        const perPage = Math.ceil(totalRecords / lastPage);
+        const from = totalRecords > 0 && itemsOnPage > 0 ? (currentPage - 1) * perPage + 1 : 0;
+        const to = from > 0 ? from + itemsOnPage - 1 : 0;
 
         return (
             <div className="flex items-center justify-between pt-4">
@@ -78,13 +70,11 @@ export default function Paginator({
                     </PaginationItem>
                 </PaginationContent>
             </div>
-        )
+        );
     }
 
     // Numeric pagination
-    const pageLinks = links.filter(
-        (link) => !['Next &raquo;', '&laquo; Previous'].includes(link.label)
-    )
+    const pageLinks = links.filter((link) => !['Next &raquo;', '&laquo; Previous'].includes(link.label));
 
     return (
         <Pagination className="justify-start">
@@ -105,16 +95,11 @@ export default function Paginator({
                         </PaginationItem>
                     ) : (
                         <PaginationItem key={idx}>
-                            <PaginationLink
-                                size="default"
-                                href="#"
-                                isActive={link.active}
-                                onClick={(e) => handlePageClick(e, link.url)}
-                            >
+                            <PaginationLink size="default" href="#" isActive={link.active} onClick={(e) => handlePageClick(e, link.url)}>
                                 {link.label}
                             </PaginationLink>
                         </PaginationItem>
-                    )
+                    ),
                 )}
 
                 <PaginationItem>
@@ -127,5 +112,5 @@ export default function Paginator({
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
-    )
+    );
 }

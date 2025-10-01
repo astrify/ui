@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import PaginatedTable from '@/components/astrify/table/paginated-table';
+import { useState } from 'react';
 
 // Full dataset for client-side pagination
 const allUsers = [
@@ -22,12 +22,29 @@ const allUsers = [
 
 const ITEMS_PER_PAGE = 5;
 
-export function SimpleTableDemo() {
+export function PaginatedTablePreview() {
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const totalPages = Math.ceil(allUsers.length / ITEMS_PER_PAGE);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const currentData = allUsers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+    // Generate pagination links
+    const generateLinks = () => {
+        const links = [];
+        links.push({ url: currentPage > 1 ? `page-${currentPage - 1}` : null, label: '&laquo; Previous', active: false });
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                links.push({ url: `page-${i}`, label: String(i), active: i === currentPage });
+            } else if (i === currentPage - 2 || i === currentPage + 2) {
+                links.push({ url: null, label: '...', active: false });
+            }
+        }
+
+        links.push({ url: currentPage < totalPages ? `page-${currentPage + 1}` : null, label: 'Next &raquo;', active: false });
+        return links;
+    };
 
     const handlePageChange = (url: string | null) => {
         if (!url) return;
@@ -35,28 +52,16 @@ export function SimpleTableDemo() {
         setCurrentPage(page);
     };
 
-    const links = [
-        { url: currentPage > 1 ? `page-${currentPage - 1}` : null, label: '&laquo; Previous', active: false },
-        { url: currentPage < totalPages ? `page-${currentPage + 1}` : null, label: 'Next &raquo;', active: false },
-    ];
-
     return (
         <div className="w-full max-w-4xl">
             <PaginatedTable
                 columns={['ID', 'Name', 'Email', 'Role', 'Status', 'Created']}
-                data={currentData.map((user) => [
-                    user.id,
-                    user.name,
-                    user.email,
-                    user.role,
-                    user.status,
-                    user.created_at,
-                ])}
+                data={currentData.map((user) => [user.id, user.name, user.email, user.role, user.status, user.created_at])}
                 pagination={{
-                    type: "simple",
+                    type: 'numeric',
                     currentPage: currentPage,
                     lastPage: totalPages,
-                    links: links,
+                    links: generateLinks(),
                     onChangePage: handlePageChange,
                     total: allUsers.length,
                 }}
@@ -65,60 +70,43 @@ export function SimpleTableDemo() {
     );
 }
 
-export const SimpleTableDemoSource = `import { router } from '@inertiajs/react';
-import PaginatedTable from '@/components/astrify/table/paginated-table';
+export const PaginatedTablePreviewSource = `import PaginatedTable from '@/components/astrify/table/paginated-table';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  created_at: string;
-}
-
-interface SimpleTableDemoProps {
-  users: {
-    data: User[];
-    current_page: number;
-    last_page: number;
-    total: number;
-    links: Array<{
-      url: string | null;
-      label: string;
-      active: boolean;
-    }>;
-  };
-}
-
-export function SimpleTableDemo({ users }: SimpleTableDemoProps) {
-  const handlePageChange = (url: string | null) => {
-    if (!url) return;
-    router.get(url, {}, { preserveScroll: true, preserveState: true });
-  };
-
+export function PaginatedTablePreview() {
   return (
-    <div className="w-full max-w-4xl">
-      <PaginatedTable
-        columns={['ID', 'Name', 'Email', 'Role', 'Status', 'Created']}
-        data={users.data.map((user) => [
-          user.id,
-          user.name,
-          user.email,
-          user.role,
-          user.status,
-          user.created_at,
-        ])}
+    <PaginatedTable
+        columns={['ID', 'Name', 'Email', 'Created']}
+        data={users.data.map((user) => [user.id, user.name, user.email, new Date(user.created_at).toLocaleDateString()])}
         pagination={{
-          type: "simple",
-          currentPage: users.current_page,
-          lastPage: users.last_page,
-          links: users.links,
-          onChangePage: handlePageChange,
-          total: users.total,
+            type: 'numeric',
+            currentPage: users.current_page,
+            lastPage: users.last_page,
+            links: users.links,
+            onChangePage: handlePageChange, // custom page-change handler
+            total: users.total,
         }}
-      />
-    </div>
-  );
-}`;
+    />
+  )
+`;
 
+
+export const JsonTablePreviewSource = `import JsonTable from '@/components/astrify/table/json-table';
+
+export function JsonTablePreview() {
+  return (
+    <JsonTable
+        url="/api/user-table-data"
+        columns={[
+            { key: 'id', label: 'ID' },
+            { key: 'name', label: 'Name' },
+            { key: 'email', label: 'Email' },
+            { key: 'created_at', label: 'Created' },
+        ]}
+        paginationType="numeric"
+        formatCell={(key, value) => {
+            if (key === 'created_at') return new Date(value).toLocaleDateString();
+            return value;
+        }}
+    />
+  )
+`;

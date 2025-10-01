@@ -1,50 +1,38 @@
-import React from "react"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import Paginator, { PaginationType } from "./paginator"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Inbox } from 'lucide-react';
+import React from 'react';
+import Paginator, { PaginationType } from './paginator';
 
 interface PaginationLinkType {
-    url: string | null
-    label: string
-    active: boolean
+    url: string | null;
+    label: string;
+    active: boolean;
 }
 
 interface PaginatedTableProps {
-    columns: string[]
-    data: (string | number)[][]
+    columns: string[];
+    data: (string | number)[][];
     pagination: {
-        type: PaginationType
-        currentPage: number
-        lastPage: number
-        links: PaginationLinkType[]
-        onChangePage: (url: string | null) => void
-        total?: number
-    }
-    placeholder?: React.ReactNode
+        type: PaginationType;
+        currentPage: number;
+        lastPage: number;
+        links: PaginationLinkType[];
+        onChangePage: (url: string | null) => void;
+        total?: number;
+    };
+    placeholder?: React.ReactNode;
 }
 
-export default function PaginatedTable({
-    columns,
-    data,
-    pagination,
-    placeholder,
-}: PaginatedTableProps) {
-    const { type, currentPage, lastPage, links, onChangePage, total } = pagination
+export default function PaginatedTable({ columns, data, pagination, placeholder }: PaginatedTableProps) {
+    const { type, currentPage, lastPage, links, onChangePage, total } = pagination;
 
     const defaultPlaceholder = (
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-            <Inbox className="size-12 text-muted-foreground/40 mb-4" />
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">No data available</h3>
+        <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
+            <Inbox className="mb-4 size-12 text-muted-foreground/40" />
+            <h3 className="mb-1 text-sm font-medium text-muted-foreground">No data available</h3>
             <p className="text-sm text-muted-foreground/60">There are no records to display</p>
         </div>
-    )
+    );
 
     return (
         <div className="space-y-4">
@@ -80,5 +68,5 @@ export default function PaginatedTable({
                 />
             )}
         </div>
-    )
+    );
 }

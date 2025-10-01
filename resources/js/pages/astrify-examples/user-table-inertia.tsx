@@ -1,9 +1,8 @@
-import React from "react" // or your own type definitions
-import PaginatedTable from "@/components/astrify/table/paginated-table"
-import { Head, router } from '@inertiajs/react';
+import PaginatedTable from '@/components/astrify/table/paginated-table';
 import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
+import { Head, router } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,31 +12,31 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface User {
-    id: number
-    name: string
-    email: string
-    created_at: string
+    id: number;
+    name: string;
+    email: string;
+    created_at: string;
 }
 
 interface Props {
     users: {
-        data: User[]
-        current_page: number
-        last_page: number
-        total: number
+        data: User[];
+        current_page: number;
+        last_page: number;
+        total: number;
         links: Array<{
-            url: string | null
-            label: string
-            active: boolean
-        }>
-    }
+            url: string | null;
+            label: string;
+            active: boolean;
+        }>;
+    };
 }
 
 export default function UserTableInertia({ users }: Props) {
     const handlePageChange = (url: string | null) => {
-        if (!url) return
-        router.get(url, {}, { preserveScroll: true, preserveState: true })
-    }
+        if (!url) return;
+        router.get(url, {}, { preserveScroll: true, preserveState: true });
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -45,18 +44,15 @@ export default function UserTableInertia({ users }: Props) {
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div>
                     <h1 className="text-xl font-bold">Inertia Table</h1>
-                    <p className="mb-4 text-sm">This table loads it's data via Inertia requests. As you paginate this table the page number is reflected in the address bar.</p>
+                    <p className="mb-4 text-sm">
+                        This table loads it's data via Inertia requests. As you paginate this table the page number is reflected in the address bar.
+                    </p>
                 </div>
                 <PaginatedTable
-                    columns={["ID", "Name", "Email", "Created"]}
-                    data={users.data.map((user) => [
-                        user.id,
-                        user.name,
-                        user.email,
-                        new Date(user.created_at).toLocaleDateString(),
-                    ])}
+                    columns={['ID', 'Name', 'Email', 'Created']}
+                    data={users.data.map((user) => [user.id, user.name, user.email, new Date(user.created_at).toLocaleDateString()])}
                     pagination={{
-                        type: "numeric",
+                        type: 'numeric',
                         currentPage: users.current_page,
                         lastPage: users.last_page,
                         links: users.links,
@@ -66,5 +62,5 @@ export default function UserTableInertia({ users }: Props) {
                 />
             </div>
         </AppLayout>
-    )
+    );
 }

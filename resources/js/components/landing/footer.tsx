@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
 import { show as docsRoute } from '@/routes/docs';
+import { Link } from '@inertiajs/react';
 
 export function Footer() {
     const currentYear = new Date().getFullYear();

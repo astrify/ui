@@ -2,9 +2,9 @@ import { DocsNav } from '@/components/docs/docs-nav';
 import { NavFooter } from '@/components/nav-footer';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem, type SharedData, type DocsManifest } from '@/types';
+import { type DocsManifest, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, Github, GithubIcon, LayoutGrid } from 'lucide-react';
+import { Github } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const footerNavItems: NavItem[] = [
@@ -36,9 +36,7 @@ export function AppSidebar({ docsManifest }: AppSidebarProps = {}) {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
-                {docsManifest && <DocsNav manifest={docsManifest} />}
-            </SidebarContent>
+            <SidebarContent>{docsManifest && <DocsNav manifest={docsManifest} />}</SidebarContent>
 
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />

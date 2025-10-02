@@ -22,7 +22,7 @@ Route::get('/docs/{slug}', [DocsController::class, 'show'])
     ->name('docs.show');
 
 require __DIR__.'/settings.php';
-// require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';
 
 
 /*
@@ -33,13 +33,11 @@ require __DIR__.'/settings.php';
 |
 */
 
-use App\Http\Controllers\Astrify\SignedUrlController;
-
 Route::middleware([])->group(function () {
     Route::get('/upload', function () {
-        return Inertia::render('upload');
+        return Inertia::render('astrify-examples/inertia-upload-example');
     })->name('upload.index');
-    
+
     Route::post('/upload', function (\Illuminate\Http\Request $request) {
         // Validate the incoming request
         $validated = $request->validate([
@@ -59,8 +57,8 @@ Route::middleware([])->group(function () {
 
         return back()->with('success', 'Files uploaded successfully');
     })->name('upload.store');
-    
-    Route::post('/upload/signed-url', SignedUrlController::class)->name('upload.signed-url');
+
+    Route::post('/upload/signed-url', \App\Http\Controllers\Astrify\SignedUrlController::class)->name('upload.signed-url');
 });
 
 

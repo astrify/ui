@@ -41,12 +41,15 @@ This command will install the necessary JavaScript dependencies, shadcn/ui compo
 
 ### 2: Configure Routes
 
-Add a route for the SignedUrlController to your routes file
+Reference the SignedUrlController in your routes file
 
 ```php
 Route::post('/upload/signed-url',
     \App\Http\Controllers\Astrify\SignedUrlController::class
-)->name('upload.signed-url')->middleware(['auth']);
+)
+// if the environment is public be sure to require auth
+//->middleware(['auth'])
+->name('upload.signed-url');
 ```
 
 ### 3: Install Laravel Dependencies
@@ -59,7 +62,7 @@ composer require league/flysystem-aws-s3-v3:^3.0
 
 ### 4: Configure your S3 Storage
 
-For local development we recommend using [MinIO](https://min.io/) as a self-hosted S3-compatible storage solution. There are many ways to run MinIO on your machine but we recommend using Docker with the following command:
+For local development we recommend using [MinIO](https://min.io/) for locally-hosted S3-compatible storage. There are many ways to run MinIO on your machine but the remaining steps will assume you ran it in Docker with the following command:
 
 ```bash
 docker run \
@@ -84,15 +87,15 @@ AWS_ENDPOINT=http://127.0.0.1:9000
 
 <Alert className="mt-8">
     <Shield className="h-4 w-4" />
-    <AlertTitle>Note</AlertTitle>
+    <AlertTitle>Pro Tip</AlertTitle>
     <AlertDescription>
-        If you're using an Amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
+        If you're using a real Amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
     </AlertDescription>
 </Alert>
 
 ## Usage
 
-This usage example integrates the upload module into an Inertia form submission. It demonstrates how to pass references for the successfully uploaded files to the Inertia useForm hook and how to prevent form submission until all file uploads are completed. The routing examples shows how to validate and receive the files in your Laravel route or controller.
+This usage example provides a full page Inertia component. It integrates the upload module into an Inertia form submission. It demonstrates how to pass references for the successfully uploaded files to the Inertia useForm hook and how to prevent form submission until all file uploads are completed. The route examples shows how to validate and receive the files in your Laravel route or controller.
 
 <ComponentSourceChild language="tsx" title="resources/js/pages/inertia-upload-example.tsx">
 {`import { Dropzone, Errors, Header, List } from '@/components/astrify/upload';
@@ -100,17 +103,17 @@ This usage example integrates the upload module into an Inertia form submission.
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
   import AppLayout from '@/layouts/app-layout';
-  import { dashboard } from '@/routes';
   import { type BreadcrumbItem } from '@/types';
   import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
   import { Head, useForm } from '@inertiajs/react';
   import { LoaderCircle } from 'lucide-react';
   import type { FormEventHandler } from 'react';
+  import { toast } from 'sonner';
 
   const breadcrumbs: BreadcrumbItem[] = [
       {
           title: 'Upload Example',
-          href: dashboard().url,
+          href: '/upload',
       },
   ];
 
@@ -130,7 +133,7 @@ This usage example integrates the upload module into an Inertia form submission.
                           },
                       }}
                   >
-                      <FormContent submitEndpoint={'/documents'} />
+                      <FormContent submitEndpoint={'/upload'} />
                   </FileUploadProvider>
               </div>
           </AppLayout>
@@ -148,7 +151,7 @@ This usage example integrates the upload module into an Inertia form submission.
       }>;
   };
 
-  function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string }) {
+  function FormContent({ submitEndpoint = '/upload' }: { submitEndpoint: string }) {
       const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } = useFileUpload();
 
       const { data, setData, post, processing, errors, reset, transform } = useForm<UploadForm>({
@@ -183,7 +186,9 @@ This usage example integrates the upload module into an Inertia form submission.
                   // Reset the name field after successful submission
                   reset('name');
                   removeAll(); // Clear all files from the upload context
-                  console.log('Form submitted successfully');
+                  toast.success('Form submitted successfully', {
+                      richColors: true,
+                  });
               },
           });
       };

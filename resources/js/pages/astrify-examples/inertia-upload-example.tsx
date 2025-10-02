@@ -3,17 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import type { FormEventHandler } from 'react';
+import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Upload Example',
-        href: dashboard().url,
+        href: '/upload',
     },
 ];
 
@@ -33,7 +33,7 @@ export default function InertiaUploadExample() {
                         },
                     }}
                 >
-                    <FormContent submitEndpoint={'/documents'} />
+                    <FormContent submitEndpoint={'/upload'} />
                 </FileUploadProvider>
             </div>
         </AppLayout>
@@ -51,7 +51,7 @@ type UploadForm = {
     }>;
 };
 
-function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string }) {
+function FormContent({ submitEndpoint = '/upload' }: { submitEndpoint: string }) {
     const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } = useFileUpload();
 
     const { data, setData, post, processing, errors, reset, transform } = useForm<UploadForm>({
@@ -86,7 +86,9 @@ function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string
                 // Reset the name field after successful submission
                 reset('name');
                 removeAll(); // Clear all files from the upload context
-                console.log('Form submitted successfully');
+                toast.success('Form submitted successfully', {
+                    richColors: true,
+                });
             },
         });
     };

@@ -43,7 +43,7 @@ const modules: Module[] = [
         title: 'Paginated Tables',
         description: 'Server-side pagination',
         status: 'Available Now',
-        docSlug: 'table',
+        docSlug: 'paginated-table',
     },
     {
         icon: TextCursorInput,

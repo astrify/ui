@@ -6,7 +6,7 @@ const starterKitFeatures = [
     {
         icon: Lock,
         title: 'Authentication',
-        description: 'Google OAuth, magic links, and classic flows ready to go.',
+        description: 'Google OAuth, magic links, and 2FA ready to go.',
     },
     {
         icon: CreditCard,
@@ -20,7 +20,7 @@ const starterKitFeatures = [
     },
     {
         icon: Bot,
-        title: 'AI Dashboard',
+        title: 'Chat Dashboard',
         description: 'Pre‑built AI integration with customizable agent rules.',
     },
     {
@@ -55,7 +55,7 @@ export function TemplateSection() {
 
                     <CardContent className="p-0">
                         <div className="mx-auto max-w-2xl text-center">
-                            <h3 className="text-2xl font-semibold tracking-tight text-foreground">Build and ship your SaaS in days, not months.</h3>
+                            <h3 className="text-2xl font-semibold tracking-tight text-foreground">Build and ship your app in days, not months.</h3>
                             <p className="mt-4 text-base text-muted-foreground">Launch faster with auth, billing, file management, and more.</p>
                         </div>
 
@@ -77,10 +77,10 @@ export function TemplateSection() {
                             <CardContent className="p-0">
                                 <div className="inline-flex items-center justify-center gap-2 text-sm font-medium text-foreground">
                                     <Sparkles className="h-4 w-4" />
-                                    AI‑Powered Development
+                                    AI Ready
                                 </div>
                                 <p className="mt-1 text-xs text-muted-foreground">
-                                    AI agent guidelines that understand your codebase so you can customize and extend with natural language.
+                                    Includes AI agent guidelines that understand your codebase so you can customize and extend with natural language.
                                 </p>
                             </CardContent>
                         </Card>

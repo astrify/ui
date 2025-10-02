@@ -22,7 +22,7 @@ This module wraps the [Paginated Table](./paginated-table) module with a compone
 ## Installation
 
 ```bash
-npx shadcn@latest add https://astrify.github.io/json-table.json
+npx shadcn@latest add https://astrify.com/r/json-table.json
 ```
 
 ## Usage
@@ -79,7 +79,7 @@ This usage example loads data via JSON fetch requests. To load data via Inertia 
 
 <ComponentSourceChild language="php" title="routes/web.php">
 {`Route::get('table-json-data', function () {
-      $users = \App\Models\User::select('id', 'name', 'email', 'created_at')
+      $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
           ->orderBy('id', 'desc')
           ->paginate(10)
           ->onEachSide(1);

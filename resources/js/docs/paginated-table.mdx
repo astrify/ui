@@ -22,7 +22,7 @@ This module wraps the [Shadcn/UI Table](https://ui.shadcn.com/docs/components/ta
 ## Installation
 
 ```bash
-npx shadcn@latest add https://astrify.github.io/paginated-table.json
+npx shadcn@latest add https://astrify.com/r/paginated-table.json
 ```
 
 ## Usage
@@ -30,16 +30,15 @@ npx shadcn@latest add https://astrify.github.io/paginated-table.json
 This usage example loads data via Inertia requests. As you paginate this table the page number would be reflected in the address bar. To load data via JSON fetch requests see the [Json Table Module](./json-table).
 
 <ComponentSourceChild language="tsx" title="resources/js/pages/inertia-table-example.tsx">
-{`import PaginatedTable from '@/components/astrify/paginated-table';
+{`import { PaginatedTable } from '@/components/astrify/paginated-table';
   import AppLayout from '@/layouts/app-layout';
-  import { dashboard } from '@/routes';
   import type { BreadcrumbItem } from '@/types';
   import { Head, router } from '@inertiajs/react';
 
   const breadcrumbs: BreadcrumbItem[] = [
       {
           title: 'Inertia Table Example',
-          href: dashboard().url,
+          href: '/inertia-table-example',
       },
   ];
 
@@ -64,7 +63,7 @@ This usage example loads data via Inertia requests. As you paginate this table t
       };
   }
 
-  export default function UserTableInertia({ users }: Props) {
+  export default function InertiaTableExample({ users }: Props) {
       const handlePageChange = (url: string | null) => {
           if (!url) return;
           router.get(url, {}, { preserveScroll: true, preserveState: true });
@@ -101,16 +100,23 @@ This usage example loads data via Inertia requests. As you paginate this table t
 
 <ComponentSourceChild language="php" title="routes/web.php">
 {`Route::get('inertia-table-example', function () {
-    $users = \App\Models\User::select('id', 'name', 'email', 'created_at')
+    $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
         ->orderBy('id', 'desc')
         ->paginate(10)
         ->onEachSide(1);
 
-    return Inertia::render('inertia-table-example.tsx', [
+    return Inertia::render('inertia-table-example', [
         'users' => $users,
     ]);
 })->name('table.index');`}
 </ComponentSourceChild>
+
+
+Optionally seed your database with test data to see the pagination in action:
+```php
+artisan tinker
+\App\Models\User::factory(100)->create();
+```
 
 ## Props
 

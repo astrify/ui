@@ -1,13 +1,12 @@
 import { PaginatedTable } from '@/components/astrify/paginated-table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Inertia Table Example',
-        href: dashboard().url,
+        href: '/inertia-table-example',
     },
 ];
 
@@ -32,7 +31,7 @@ interface Props {
     };
 }
 
-export default function UserTableInertia({ users }: Props) {
+export default function InertiaTableExample({ users }: Props) {
     const handlePageChange = (url: string | null) => {
         if (!url) return;
         router.get(url, {}, { preserveScroll: true, preserveState: true });

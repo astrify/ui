@@ -30,20 +30,19 @@ npx shadcn@latest add https://astrify.com/r/json-table.json
 This usage example loads data via JSON fetch requests. To load data via Inertia requests see the [Paginated Table Module](./paginated-table).
 
 <ComponentSourceChild language="tsx" title="resources/js/pages/json-table-example.tsx">
-{`import JsonTable from '@/components/astrify/json-table';
+{`import { JsonTable } from '@/components/astrify/json-table';
   import AppLayout from '@/layouts/app-layout';
-  import { dashboard } from '@/routes';
   import type { BreadcrumbItem } from '@/types';
   import { Head } from '@inertiajs/react';
 
   const breadcrumbs: BreadcrumbItem[] = [
       {
           title: 'JSON Table Example',
-          href: dashboard().url,
+          href: '/json-table-example',
       },
   ];
 
-  export default function UserTableJson() {
+  export default function JsonTableExample() {
       return (
           <AppLayout breadcrumbs={breadcrumbs}>
               <Head title="JSON Table Example" />
@@ -57,7 +56,7 @@ This usage example loads data via JSON fetch requests. To load data via Inertia 
                   </div>
 
                   <JsonTable
-                      url="/table-json-data"
+                      url="/json-table-data-example"
                       columns={[
                           { key: 'id', label: 'ID' },
                           { key: 'name', label: 'Name' },
@@ -74,23 +73,29 @@ This usage example loads data via JSON fetch requests. To load data via Inertia 
           </AppLayout>
       );
   }
+
 `}
 </ComponentSourceChild>
 
 <ComponentSourceChild language="php" title="routes/web.php">
-{`Route::get('table-json-data', function () {
+{`Route::get('/json-table-data-example', function () {
       $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
           ->orderBy('id', 'desc')
-          ->paginate(10)
-          ->onEachSide(1);
+          ->paginate(10);
 
       return response()->json($users);
   });
 
-  Route::get('tetable-json-data', function () {
+  Route::get('/json-table-example', function () {
       return Inertia::render('json-table-example');
   });`}
 </ComponentSourceChild>
+
+Optionally seed your database with test data to see the pagination in action:
+```php
+artisan tinker
+\App\Models\User::factory(100)->create();
+```
 
 ## Props
 

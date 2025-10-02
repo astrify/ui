@@ -1,17 +1,16 @@
 import { JsonTable } from '@/components/astrify/json-table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'JSON Table Example',
-        href: dashboard().url,
+        href: '/json-table-example',
     },
 ];
 
-export default function UserTableJson() {
+export default function JsonTableExample() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="JSON Table Example" />
@@ -25,7 +24,7 @@ export default function UserTableJson() {
                 </div>
 
                 <JsonTable
-                    url="/examples/user-table-json-data"
+                    url="/json-table-data-example"
                     columns={[
                         { key: 'id', label: 'ID' },
                         { key: 'name', label: 'Name' },

@@ -81,15 +81,14 @@ Route::get('examples/user-table-inertia', function () {
     ]);
 })->name('table.index');
 
-Route::get('examples/user-table-json-data', function () {
+Route::get('/json-table-data-example', function () {
     $users = \App\Models\User::select('id', 'name', 'email', 'created_at')
         ->orderBy('id', 'desc')
-        ->paginate(10)
-        ->onEachSide(1);
+        ->paginate(10);
 
     return response()->json($users);
 })->name('json-table.index');
 
-Route::get('examples/user-table-json', function () {
-    return Inertia::render('astrify-examples/user-table-json');
+Route::get('json-table-example', function () {
+    return Inertia::render('astrify-examples/json-table-example');
 });

@@ -12,16 +12,6 @@
             "registryDependencies": ["input", "label", "button", "https://astrify.github.io/react-s3-upload/r/upload.json"],
             "files": [
                 {
-                    "path": "resources/js/pages/upload.tsx",
-                    "type": "registry:file",
-                    "target": "resources/js/pages/upload.tsx"
-                },
-                {
-                    "path": "app/Http/Controllers/Astrify/UploadController.php",
-                    "type": "registry:file",
-                    "target": "app/Http/Controllers/Astrify/UploadController.php"
-                },
-                {
                     "path": "app/Http/Controllers/Astrify/SignedUrlController.php",
                     "type": "registry:file",
                     "target": "app/Http/Controllers/Astrify/SignedUrlController.php"
@@ -32,7 +22,7 @@
             },
             "cssVars": {},
             "categories": ["upload", "example", "inertia"],
-            "docs": "\n--------------------------------------------------------------------------\n Remaining Installation Steps:\n--------------------------------------------------------------------------\n\n1. Install required Composer dependencies:\n   composer require league/flysystem-aws-s3-v3:^3.0\n\n2. Add the following routes to your routes/web.php file:\n   Route::post('/upload', App\\Http\\Controllers\\Astrify\\UploadController::class)\n       ->middleware(['auth'])\n       ->name('upload.store');\n   \n   Route::post('/upload/signed-url', App\\Http\\Controllers\\Astrify\\SignedUrlController::class)\n       ->middleware(['auth'])\n       ->name('upload.signed-url');\n\n3. Configure S3 storage by setting your AWS environment variables (MinIO recomended for local development).\n\n**Note:** You may need to set up CORS for your S3 bucket to allow POST requests from your domain.\n\n--------------------------------------------------------------------------\n Usage:\n--------------------------------------------------------------------------\n\nimport { InertiaUpload } from '@/components/astrify/upload/upload';\n\n<Upload \n  signedUrlEndpoint=\"/upload/signed-url\"\n  submitEndpoint=\"/documents\"\n  maxFiles={5}\n  maxSize={10 * 1024 * 1024} // 10MB\n/>"
+            "docs": "\n--------------------------------------------------------------------------\n Remaining Installation Steps:\n--------------------------------------------------------------------------\n\n1. Configure Routes\n\nAdd a route for the SignedUrlController to your routes file:\n\nRoute::post('/upload/signed-url',\n    \\App\\Http\\Controllers\\Astrify\\SignedUrlController::class\n)->name('upload.signed-url')->middleware(['auth']);\n\n2. Install Laravel Dependencies\n\nInstall the Flysystem S3 package via the Composer package manager:\n\ncomposer require league/flysystem-aws-s3-v3:^3.0\n\n3. Configure your S3 Storage\n\nFor local development we recommend using MinIO as a self-hosted S3-compatible storage solution. Set the required AWS environment variables in your .env file.\n\n**Note:** If you're using an Amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.\n\n--------------------------------------------------------------------------\n Usage:\n--------------------------------------------------------------------------\n\nimport { Dropzone, Errors, Header, List } from '@/components/astrify/upload';\nimport { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';\n\n<FileUploadProvider\n    config={{\n        signedUrlEndpoint: '/upload/signed-url',\n        maxFiles: 10,\n        maxSize: 10 * 1024 * 1024, // 10MB\n        accept: {\n            'image/*': ['.png', '.jpeg', '.jpg'],\n            'application/pdf': ['.pdf'],\n        },\n    }}\n>\n    <Dropzone />\n    <Header />\n    <Errors />\n    <List showImagePreviews={false} />\n</FileUploadProvider>"
         }
     ]
 }

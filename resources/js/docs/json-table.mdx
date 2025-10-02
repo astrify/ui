@@ -13,11 +13,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Table, ListOrdered, Database, Zap } from 'lucide-react';
-import { PaginatedTablePreview, JsonTablePreviewSource } from '@/components/previews/paginated-table-preview';
+import { TablePreview, JsonTablePreviewSource } from '@/components/previews/table-preview';
 
 This module wraps the [Paginated Table](./paginated-table) module with a component that fetches data from the given URL and expects the response to be in the same format as Laravel's paginator json output.
 
-<ComponentPreview component={<PaginatedTablePreview />} code={JsonTablePreviewSource} title="json-table-example.tsx" language="tsx" />
+<ComponentPreview component={<TablePreview paginationType="simple" />} code={JsonTablePreviewSource} title="json-table-example.tsx" language="tsx" />
 
 ## Installation
 
@@ -30,7 +30,7 @@ npx shadcn@latest add https://astrify.github.io/json-table.json
 This usage example loads data via JSON fetch requests. To load data via Inertia requests see the [Paginated Table Module](./paginated-table).
 
 <ComponentSourceChild language="tsx" title="resources/js/pages/json-table-example.tsx">
-{`import JsonTable from '@/components/astrify/table/json-table';
+{`import JsonTable from '@/components/astrify/json-table';
   import AppLayout from '@/layouts/app-layout';
   import { dashboard } from '@/routes';
   import type { BreadcrumbItem } from '@/types';

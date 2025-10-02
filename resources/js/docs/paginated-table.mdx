@@ -13,11 +13,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Table, ListOrdered, Database, Zap } from 'lucide-react';
-import { PaginatedTablePreview, PaginatedTablePreviewSource } from '@/components/previews/paginated-table-preview';
+import { TablePreview, PaginatedTablePreviewSource } from '@/components/previews/table-preview';
 
 This module wraps the [Shadcn/UI Table](https://ui.shadcn.com/docs/components/table) components with Laravel's default paginator. The provided integration example uses inertia as the data source.
 
-<ComponentPreview component={<PaginatedTablePreview />} code={PaginatedTablePreviewSource} title="paginated-table-preview.tsx" language="tsx" />
+<ComponentPreview component={<TablePreview />} code={PaginatedTablePreviewSource} title="paginated-table-example.tsx" language="tsx" />
 
 ## Installation
 
@@ -30,7 +30,7 @@ npx shadcn@latest add https://astrify.github.io/paginated-table.json
 This usage example loads data via Inertia requests. As you paginate this table the page number would be reflected in the address bar. To load data via JSON fetch requests see the [Json Table Module](./json-table).
 
 <ComponentSourceChild language="tsx" title="resources/js/pages/inertia-table-example.tsx">
-{`import PaginatedTable from '@/components/astrify/table/paginated-table';
+{`import PaginatedTable from '@/components/astrify/paginated-table';
   import AppLayout from '@/layouts/app-layout';
   import { dashboard } from '@/routes';
   import type { BreadcrumbItem } from '@/types';

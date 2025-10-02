@@ -1,4 +1,4 @@
-import { PaginatedTable } from '@/components/astrify/table/paginated-table';
+import { PaginatedTable, PaginationType } from '@/components/astrify/paginated-table';
 import { useState } from 'react';
 
 // Full dataset for client-side pagination
@@ -22,7 +22,11 @@ const allUsers = [
 
 const ITEMS_PER_PAGE = 5;
 
-export function PaginatedTablePreview() {
+interface TablePreviewProps {
+    paginationType?: PaginationType;
+}
+
+export function TablePreview({ paginationType = 'numeric' }: TablePreviewProps = {}) {
     const [currentPage, setCurrentPage] = useState(1);
 
     const totalPages = Math.ceil(allUsers.length / ITEMS_PER_PAGE);
@@ -58,7 +62,7 @@ export function PaginatedTablePreview() {
                 columns={['ID', 'Name', 'Email', 'Role', 'Status', 'Created']}
                 data={currentData.map((user) => [user.id, user.name, user.email, user.role, user.status, user.created_at])}
                 pagination={{
-                    type: 'numeric',
+                    type: paginationType,
                     currentPage: currentPage,
                     lastPage: totalPages,
                     links: generateLinks(),
@@ -70,43 +74,53 @@ export function PaginatedTablePreview() {
     );
 }
 
-export const PaginatedTablePreviewSource = `import PaginatedTable from '@/components/astrify/table/paginated-table';
+export const PaginatedTablePreviewSource = `import PaginatedTable from '@/components/astrify/paginated-table';
 
 export function PaginatedTablePreview() {
+  const handlePageChange = (url: string | null) => {
+    if (!url) return;
+    router.get(url, {}, { preserveScroll: true, preserveState: true });
+  };
+
   return (
     <PaginatedTable
-        columns={['ID', 'Name', 'Email', 'Created']}
-        data={users.data.map((user) => [user.id, user.name, user.email, new Date(user.created_at).toLocaleDateString()])}
-        pagination={{
-            type: 'numeric',
-            currentPage: users.current_page,
-            lastPage: users.last_page,
-            links: users.links,
-            onChangePage: handlePageChange, // custom page-change handler
-            total: users.total,
-        }}
+      columns={["ID", "Name", "Email", "Created"]}
+      data={users.data.map((user) => [
+        user.id,
+        user.name,
+        user.email,
+        new Date(user.created_at).toLocaleDateString(),
+      ])}
+      pagination={{
+        type: "numeric",
+        currentPage: users.current_page,
+        lastPage: users.last_page,
+        links: users.links,
+        onChangePage: handlePageChange, // custom page-change handler
+        total: users.total,
+      }}
     />
-  )
-`;
+  );
+}`;
 
 
-export const JsonTablePreviewSource = `import JsonTable from '@/components/astrify/table/json-table';
+export const JsonTablePreviewSource = `import JsonTable from '@/components/astrify/json-table';
 
 export function JsonTablePreview() {
   return (
     <JsonTable
-        url="/api/user-table-data"
-        columns={[
-            { key: 'id', label: 'ID' },
-            { key: 'name', label: 'Name' },
-            { key: 'email', label: 'Email' },
-            { key: 'created_at', label: 'Created' },
-        ]}
-        paginationType="numeric"
-        formatCell={(key, value) => {
-            if (key === 'created_at') return new Date(value).toLocaleDateString();
-            return value;
-        }}
+      url="/api/user-table-data"
+      columns={[
+        { key: "id", label: "ID" },
+        { key: "name", label: "Name" },
+        { key: "email", label: "Email" },
+        { key: "created_at", label: "Created" },
+      ]}
+      paginationType="numeric"
+      formatCell={(key, value) => {
+        if (key === "created_at") return new Date(value).toLocaleDateString();
+        return value;
+      }}
     />
-  )
-`;
+  );
+}`;

@@ -7,7 +7,6 @@ use Aws\Signature\S3SignatureV4;
 use Aws\Signature\SignatureProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 
 class SignedUrlController extends Controller
@@ -29,7 +28,7 @@ class SignedUrlController extends Controller
             'files.*.sha256' => 'required|string|regex:/^[a-f0-9]{64}$/i',
         ]);
 
-        // Initialize S3 client once for all files
+        // Initialize S3 client
         $signatureProvider = SignatureProvider::memoize(static function ($version, $service, $region) {
             if (($version === 's3v4' || $version === 'v4') && $service === 's3') {
                 return new MyCustomS3Signature($service, $region);
@@ -65,13 +64,6 @@ class SignedUrlController extends Controller
         foreach ($validated['files'] as $fileData) {
             // Use the hash as the key (no folder structure, no extension)
             $key = 'uploads/'.strtolower($fileData['sha256']);
-
-            // Check if file with this hash already exists
-            //        if (Storage::disk('s3')->exists($key)) {
-            //            throw ValidationException::withMessages([
-            //                'sha256' => ['A file with this content already exists.'],
-            //            ]);
-            //        }
 
             // Create the presigned request with checksum header
             $checksum = base64_encode(hex2bin($fileData['sha256']));

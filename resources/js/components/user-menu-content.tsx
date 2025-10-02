@@ -35,13 +35,13 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-                <Link className="block w-full" href={logout()} as="button" onClick={handleLogout}>
-                    <LogOut className="mr-2" />
-                    Log out
-                </Link>
-            </DropdownMenuItem>
+            {/*<DropdownMenuSeparator />*/}
+            {/*<DropdownMenuItem asChild>*/}
+            {/*    <Link className="block w-full" href={logout()} as="button" onClick={handleLogout}>*/}
+            {/*        <LogOut className="mr-2" />*/}
+            {/*        Log out*/}
+            {/*    </Link>*/}
+            {/*</DropdownMenuItem>*/}
         </>
     );
 }

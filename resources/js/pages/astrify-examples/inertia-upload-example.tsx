@@ -17,7 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Upload() {
+export default function InertiaUploadExample() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Upload" />

@@ -22,7 +22,7 @@ Route::get('/docs/{slug}', [DocsController::class, 'show'])
     ->name('docs.show');
 
 require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
 
 
 /*
@@ -34,11 +34,32 @@ require __DIR__.'/auth.php';
 */
 
 use App\Http\Controllers\Astrify\SignedUrlController;
-use App\Http\Controllers\Astrify\UploadController;
 
 Route::middleware([])->group(function () {
-    Route::get('/upload', [UploadController::class, 'index'])->name('upload.index');
-    Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+    Route::get('/upload', function () {
+        return Inertia::render('upload');
+    })->name('upload.index');
+    
+    Route::post('/upload', function (\Illuminate\Http\Request $request) {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'uploadedFiles' => 'required|array|min:1',
+            'uploadedFiles.*.id' => 'required|string',
+            'uploadedFiles.*.name' => 'required|string',
+            'uploadedFiles.*.sha256' => 'required|string',
+            'uploadedFiles.*.size' => 'required|integer|min:0',
+            'uploadedFiles.*.type' => 'required|string',
+        ]);
+
+        \Illuminate\Support\Facades\Log::info('Document creation request received', [
+            'name' => $validated['name'],
+            'uploaded_files' => $validated['uploadedFiles'],
+        ]);
+
+        return back()->with('success', 'Files uploaded successfully');
+    })->name('upload.store');
+    
     Route::post('/upload/signed-url', SignedUrlController::class)->name('upload.signed-url');
 });
 

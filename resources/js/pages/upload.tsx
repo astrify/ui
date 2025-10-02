@@ -1,7 +1,4 @@
-import { Dropzone } from '@/components/astrify/upload/dropzone';
-import { Errors } from '@/components/astrify/upload/errors';
-import { Header } from '@/components/astrify/upload/header';
-import { List } from '@/components/astrify/upload/list';
+import { Dropzone, Errors, Header, List } from '@/components/astrify/upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

@@ -1,4 +1,4 @@
-import PaginatedTable from '@/components/astrify/table/paginated-table';
+import { PaginatedTable } from '@/components/astrify/table/paginated-table';
 import { useState } from 'react';
 
 // Full dataset for client-side pagination

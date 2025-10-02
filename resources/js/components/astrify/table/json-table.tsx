@@ -1,7 +1,6 @@
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import PaginatedTable from './paginated-table';
-import type { PaginationType } from './paginator';
+import { PaginatedTable, type PaginationType } from './paginated-table';
 
 interface JsonTableColumn {
     key: string;
@@ -27,7 +26,7 @@ interface PaginatedResponse {
     }>;
 }
 
-export default function JsonTable({ url, columns, paginationType = 'numeric', formatCell }: JsonTableProps) {
+export function JsonTable({ url, columns, paginationType = 'numeric', formatCell }: JsonTableProps) {
     const [data, setData] = useState<PaginatedResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

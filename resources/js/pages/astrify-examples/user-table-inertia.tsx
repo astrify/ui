@@ -1,4 +1,4 @@
-import PaginatedTable from '@/components/astrify/table/paginated-table';
+import { PaginatedTable } from '@/components/astrify/table/paginated-table';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';

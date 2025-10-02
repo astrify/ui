@@ -1,7 +1,4 @@
-import { Dropzone } from '@/components/astrify/upload/dropzone';
-import { Errors } from '@/components/astrify/upload/errors';
-import { Header } from '@/components/astrify/upload/header';
-import { List } from '@/components/astrify/upload/list';
+import { Dropzone, Errors, Header, List } from '@/components/astrify/upload';
 import { createUploadSuccessFake } from '@/lib/upload-fakes';
 import { FileUploadProvider, UploadLib, useFileUpload } from '@astrify/react-s3-upload';
 
@@ -79,10 +76,7 @@ export function ImageUploadDemo() {
 }
 
 export const UploadPreviewSource = `import { FileUploadProvider } from '@astrify/react-s3-upload';
-import { Dropzone } from '@/components/astrify/upload/dropzone';
-import { Errors } from '@/components/astrify/upload/errors';
-import { Header } from '@/components/astrify/upload/header';
-import { List } from '@/components/astrify/upload/list';
+import { Dropzone, Errors, Header, List } from '@/components/astrify/upload';
 
 export function UploadDemo() {
     return (
@@ -106,22 +100,7 @@ export function UploadDemo() {
 }`;
 
 export const ImageUploadDemoSource = `import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
-import { Dropzone } from '@/components/astrify/upload/dropzone';
-import { Errors } from '@/components/astrify/upload/errors';
-import { List } from '@/components/astrify/upload/list';
-
-function ImageUploadContent() {
-    const { files } = useFileUpload();
-    const hasFile = files.length > 0;
-
-    return (
-        <div className="space-y-4">
-            {!hasFile && <Dropzone />}
-            <Errors />
-            <List showImagePreviews={true} />
-        </div>
-    );
-}
+import { Dropzone, Errors, List } from '@/components/astrify/upload';
 
 export function ImageUploadDemo() {
     return (
@@ -136,7 +115,11 @@ export function ImageUploadDemo() {
                     }
                 }}
             >
-                <ImageUploadContent />
+            <div className="space-y-4">
+                {!hasFile && <Dropzone />}
+                <Errors />
+                <List showImagePreviews={true} />
+            </div>
             </FileUploadProvider>
         </div>
     );

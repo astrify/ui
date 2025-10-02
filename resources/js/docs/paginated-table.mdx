@@ -1,5 +1,5 @@
 ---
-title: Paginated Table Module
+title: Paginated Table
 description: A complete paginated table solution integrated with Laravel Inertia.js, featuring numeric and simple pagination styles with seamless backend integration.
 date: 2025-09-30
 label: Paginated Table
@@ -112,18 +112,32 @@ This usage example loads data via Inertia requests. As you paginate this table t
 })->name('table.index');`}
 </ComponentSourceChild>
 
-## PaginatedTable Props
+## Props
 
-| Prop                      | Type                            | Description                                                                |
-| ------------------------- | ------------------------------- | -------------------------------------------------------------------------- |
-| `columns`                 | `string[]`                      | Array of column header labels                                              |
-| `data`                    | `(string \| number)[][]`        | 2D array of table data rows                                                |
-| `pagination.type`         | `"simple" \| "numeric"`         | The pagination style to use                                                |
-| `pagination.currentPage`  | `number`                        | Current page number                                                        |
-| `pagination.lastPage`     | `number`                        | Total number of pages                                                      |
-| `pagination.links`        | `PaginationLinkType[]`          | Array of pagination link objects from Laravel                              |
-| `pagination.onChangePage` | `(url: string \| null) => void` | Callback function when page changes                                        |
-| `pagination.total`        | `number` (optional)             | Total number of records                                                    |
-| `placeholder`             | `React.ReactNode` (optional)    | Custom content to show when data is empty (loading, errors, empty states)  |
+### PaginatedTable
 
-> **Next Steps:** Try implementing the table component with your own models and customize the columns and data display to match your requirements.
+| Prop          | Type                         | Description                                                               |
+| ------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `columns`     | `string[]`                   | Array of column header labels                                             |
+| `data`        | `(string \| number)[][]`     | 2D array of table data rows                                               |
+| `pagination`  | `PaginatorConfig`            | Pagination configuration object                                           |
+| `placeholder` | `React.ReactNode` (optional) | Custom content to show when data is empty (loading, errors, empty states) |
+
+### PaginatorConfig
+
+| Prop           | Type                            | Description                                   |
+| -------------- | ------------------------------- | --------------------------------------------- |
+| `type`         | `"simple" \| "numeric"`         | The pagination style to use                   |
+| `currentPage`  | `number`                        | Current page number                           |
+| `lastPage`     | `number`                        | Total number of pages                         |
+| `links`        | `PaginationLinkType[]`          | Array of pagination link objects from Laravel |
+| `onChangePage` | `(url: string \| null) => void` | Callback function when page changes           |
+| `total`        | `number` (optional)             | Total number of records                       |
+
+### PaginationLinkType
+
+| Prop     | Type              | Description                     |
+| -------- | ----------------- | ------------------------------- |
+| `url`    | `string \| null`  | URL for the pagination link     |
+| `label`  | `string`          | Label text for the link         |
+| `active` | `boolean`         | Whether this link is active     |

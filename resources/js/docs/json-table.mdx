@@ -1,5 +1,5 @@
 ---
-title: Json Table Module
+title: Json Table
 description: A complete paginated table solution integrated with Laravel Inertia.js, featuring numeric and simple pagination styles with seamless backend integration using JSON data sources.
 date: 2025-09-30
 label: JSON Table
@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { Table, ListOrdered, Database, Zap } from 'lucide-react';
 import { PaginatedTablePreview, JsonTablePreviewSource } from '@/components/previews/paginated-table-preview';
 
-This module wraps the the [Paginated Table](./paginated-table) module with a component that fetches data from the given URL and expects the response to be in the same format as Laravel's paginator json output.
+This module wraps the [Paginated Table](./paginated-table) module with a component that fetches data from the given URL and expects the response to be in the same format as Laravel's paginator json output.
 
 <ComponentPreview component={<PaginatedTablePreview />} code={JsonTablePreviewSource} title="json-table-example.tsx" language="tsx" />
 
@@ -27,7 +27,7 @@ npx shadcn@latest add https://astrify.github.io/json-table.json
 
 ## Usage
 
-This usage example loads data via JSON fetch requests. As you paginate this table the page number would NOT be reflected in the address bar. To load data via Inertia requests see the [Paginated Table Module](./paginated-table).
+This usage example loads data via JSON fetch requests. To load data via Inertia requests see the [Paginated Table Module](./paginated-table).
 
 <ComponentSourceChild language="tsx" title="resources/js/pages/json-table-example.tsx">
 {`import JsonTable from '@/components/astrify/table/json-table';
@@ -92,7 +92,9 @@ This usage example loads data via JSON fetch requests. As you paginate this tabl
   });`}
 </ComponentSourceChild>
 
-## JsonTable Props
+## Props
+
+### JsonTable
 
 | Prop              | Type                                              | Description                                                        |
 | ----------------- | ------------------------------------------------- | ------------------------------------------------------------------ |
@@ -107,5 +109,3 @@ This usage example loads data via JSON fetch requests. As you paginate this tabl
 | ------- | -------- | ------------------------------------------ |
 | `key`   | `string` | The key in the data object to display      |
 | `label` | `string` | The column header label                    |
-
-> **Next Steps:** Try implementing the table component with your own models and customize the columns and data display to match your requirements.

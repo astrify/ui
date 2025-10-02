@@ -27,34 +27,29 @@ Upload a single image file with preview and validation.
 
 <ComponentPreview component={<ImageUploadDemo />} code={ImageUploadDemoSource} title="image-upload-demo.tsx" language="tsx" />
 
-## Installation Steps
-
-This module is designed to be installed into applications derived from the official Laravel React starter kit. For more information please read the <a href="/docs/introduction" className="underline">Introduction page</a>.
+## Installation
 
 ### 1: Install the Module
 
 You can install the upload module using the shadcn registry system:
 
 ```bash
-npx shadcn@latest add https://astrify.github.io/upload.json
+npx shadcn@latest add https://astrify.github.io/file-upload.json
 ```
 
-In addition to installing the necessary JS dependencies, this command installs the following files into your application:
+This command will install the necessary JavaScript dependencies, shadcn/ui components, and add the SignedUrlController.php to your application.
 
-```bash
-app/
-└── Http/
-    └── Controllers/
-        └── Astrify/
-            ├── SignedUrlController.php
-            └── UploadController.php
-resources/
-└── js/
-    └── pages/
-        └── upload.tsx
+### 2: Configure Routes
+
+Add a route for the SignedUrlController to your routes file
+
+```php
+Route::post('/upload/signed-url',
+    \App\Http\Controllers\Astrify\SignedUrlController::class
+)->name('upload.signed-url')->middleware(['auth']);
 ```
 
-### 2: Install Laravel Dependencies
+### 3: Install Laravel Dependencies
 
 Install the Flysystem S3 package via the Composer package manager:
 
@@ -62,24 +57,9 @@ Install the Flysystem S3 package via the Composer package manager:
 composer require league/flysystem-aws-s3-v3:^3.0
 ```
 
-### 3: Configure Routes
-
-Add the following routes to your `routes/web.php` file:
-
-```php
-use App\Http\Controllers\Astrify\UploadController;
-use App\Http\Controllers\Astrify\SignedUrlController;
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/upload', [UploadController::class, 'index'])->name('upload.index');
-    Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
-    Route::post('/upload/signed-url', SignedUrlController::class)->name('upload.signed-url');
-});
-```
-
 ### 4: Configure your S3 Storage
 
-For local development we recommend using [MinIO](https://min.io/) as a self-hosted S3-compatible storage solution. You can run MinIO locally using Docker with the following command:
+For local development we recommend using [MinIO](https://min.io/) as a self-hosted S3-compatible storage solution. There are many ways to run MinIO on your machine but we recommend using Docker with the following command:
 
 ```bash
 docker run \
@@ -88,9 +68,9 @@ docker run \
   quay.io/minio/minio server /data --console-address ":9001"
 ```
 
-Then login to the console at [http://localhost:9001](http://localhost:9001) using the default credentials (`minioadmin` / `minioadmin`) and create a new bucket called `my-bucket`.
+Next login to the MinIO console at [http://localhost:9001](http://localhost:9001) using the default credentials (`minioadmin` / `minioadmin`) and create a new bucket called `my-bucket`.
 
-And set the following environment variables in your `.env` file:
+Finally set the following environment variables in your `.env` file:
 
 ```env
 AWS_BUCKET=my-bucket
@@ -102,40 +82,147 @@ AWS_URL=http://127.0.0.1:9000/my-bucket
 AWS_ENDPOINT=http://127.0.0.1:9000
 ```
 
-Finally navigate to the `/upload` route in your laravel app to test the module.
-
 <Alert className="mt-8">
     <Shield className="h-4 w-4" />
     <AlertTitle>Note</AlertTitle>
     <AlertDescription>
-        If you're using an amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
+        If you're using an Amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
     </AlertDescription>
 </Alert>
 
 ## Usage
 
-### Basic Implementation
+This usage example
 
 ```tsx
-import { Upload } from '@/components/astrify/upload/upload';
+import { Dropzone, Errors, Header, List } from '@/components/astrify/upload';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import { type BreadcrumbItem } from '@/types';
+import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import type { FormEventHandler } from 'react';
 
-export default function UploadPage() {
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Upload Example',
+        href: dashboard().url,
+    },
+];
+
+export default function Upload() {
     return (
-        <div className="container mx-auto py-8">
-            <h1 className="mb-6 text-2xl font-bold">Upload Files</h1>
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Upload" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <FileUploadProvider
+                    config={{
+                        signedUrlEndpoint: '/upload/signed-url',
+                        maxFiles: 10,
+                        maxSize: 10 * 1024 * 1024, // 10MB
+                        accept: {
+                            'image/*': ['.png', '.jpeg', '.jpg'],
+                            'application/pdf': ['.pdf'],
+                        },
+                    }}
+                >
+                    <FormContent submitEndpoint={'/documents'} />
+                </FileUploadProvider>
+            </div>
+        </AppLayout>
+    );
+}
 
-            <Upload
-                config={{
-                    signedUrlEndpoint: '/upload/signed-url',
-                    maxFiles: 10,
-                    maxSize: 10 * 1024 * 1024, // 10MB
-                    accept: {
-                        'application/pdf': ['.pdf'],
-                        'image/*': ['.png', '.jpeg', '.jpg'],
-                    },
-                }}
-            />
-        </div>
+type UploadForm = {
+    name: string;
+    uploadedFiles: Array<{
+        id: string;
+        name: string;
+        sha256: string;
+        size: number;
+        type: string;
+    }>;
+};
+
+function FormContent({ submitEndpoint = '/documents' }: { submitEndpoint: string }) {
+    const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } = useFileUpload();
+
+    const { data, setData, post, processing, errors, reset, transform } = useForm<UploadForm>({
+        name: '',
+        uploadedFiles: [],
+    });
+
+    const submitForm: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        // Extract only completed files for submission
+        const completedFiles = files.filter((f) => f.status === 'complete');
+
+        // Prepare the uploaded files data
+        const uploadedFiles = completedFiles.map((f) => ({
+            id: f.id,
+            name: f.name,
+            sha256: f.sha256,
+            size: f.size,
+            type: f.type,
+        }));
+
+        // Transform the form data to include uploaded files and submit
+        transform((formData) => ({
+            ...formData,
+            uploadedFiles,
+        }));
+
+        // Submit using Inertia
+        post(submitEndpoint, {
+            onFinish: () => {
+                // Reset the name field after successful submission
+                reset('name');
+                removeAll(); // Clear all files from the upload context
+                console.log('Form submitted successfully');
+            },
+        });
+    };
+
+    // Enable submit only when all uploads are complete and form has a name
+    const canSubmit = hasComplete && !hasPending && !hasUploading && !hasErrors && data.name.length > 0;
+
+    return (
+        <form onSubmit={submitForm} className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    required={true}
+                    value={data.name}
+                    onChange={(e) => setData('name', e.target.value)}
+                />
+                {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+            </div>
+
+            <div className="space-y-2">
+                <Label>Attachments</Label>
+                <div className="space-y-4">
+                    <Dropzone />
+                    <Header />
+                    <Errors />
+                    <List showImagePreviews={false} />
+                </div>
+                {errors.uploadedFiles && <p className="text-sm text-destructive">{errors.uploadedFiles}</p>}
+            </div>
+
+            <Button type="submit" disabled={!canSubmit || processing} className="w-full sm:w-auto">
+                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                Submit with {files.filter((f) => f.status === 'complete').length} files
+            </Button>
+        </form>
     );
 }
 ```

@@ -1,4 +1,4 @@
-import JsonTable from '@/components/astrify/table/json-table';
+import { JsonTable } from '@/components/astrify/table/json-table';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';

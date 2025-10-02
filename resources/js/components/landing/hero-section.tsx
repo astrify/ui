@@ -30,8 +30,8 @@ export function HeroSection() {
                                 </Link>
                             </Button>
 
-                            <Button asChild variant="outline" size="lg" className="inline-flex items-center gap-2 bg-transparent dark:text-zinc-50">
-                                <a href="#template">
+                            <Button asChild variant="outline" size="lg" className="inline-flex items-center gap-2 dark:text-zinc-50">
+                                <a href="./#template">
                                     <Clock className="h-4 w-4" />
                                     Starter Kit — Coming Soon
                                 </a>

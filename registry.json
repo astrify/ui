@@ -22,7 +22,7 @@
             },
             "cssVars": {},
             "categories": ["upload", "laravel", "inertia"],
-            "docs": "\n--------------------------------------------------------------------------\n Remaining Installation Steps:\n--------------------------------------------------------------------------\n\n1. Configure Routes\n\nAdd a route for the SignedUrlController to your routes file:\n\nRoute::post('/upload/signed-url',\n    \\App\\Http\\Controllers\\Astrify\\SignedUrlController::class\n)->name('upload.signed-url'); // if the environment is public be sure to require auth\n\n2. Install Laravel Dependencies\n\nInstall the Flysystem S3 package via the Composer package manager:\n\ncomposer require league/flysystem-aws-s3-v3:^3.0\n\n3. Configure your S3 Storage\n\nFor local development we recommend using MinIO as a self-hosted S3-compatible storage solution. Set the required AWS environment variables in your .env file.\n"
+            "docs": "The Astrify Upload Module has been installed. For usage instructions, visit https://astrify.com/docs/upload"
         },
         {
             "name": "paginated-table",
@@ -42,7 +42,7 @@
             },
             "cssVars": {},
             "categories": ["table", "pagination", "inertia", "laravel"],
-            "docs": "For a usage example, visit https://astrify.com/docs/paginated-table"
+            "docs": "The Paginated Table component has been installed. For usage instructions, visit https://astrify.com/docs/paginated-table"
         },
         {
             "name": "json-table",
@@ -62,7 +62,7 @@
             },
             "cssVars": {},
             "categories": ["table", "pagination", "data-fetching", "inertia", "laravel"],
-            "docs": "For a usage example, visit https://astrify.com/docs/json-table"
+            "docs": "The JSON Table component has been installed. For usage instructions, visit https://astrify.com/docs/json-table"
         }
     ]
 }

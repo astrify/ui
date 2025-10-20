@@ -84,7 +84,7 @@ export default function Page(props) {
     async function validateMdxFile(absFile: string): Promise<void> {
         try {
             const content = await fs.readFile(absFile, 'utf8');
-            const { data, content: markdownContent } = matter(content);
+            const { content: markdownContent } = matter(content);
 
             // Basic validation checks
             if (!markdownContent.trim()) {

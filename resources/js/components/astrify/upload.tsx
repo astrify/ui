@@ -48,8 +48,6 @@ function formatRejectionError(
 	file: File,
 	errorCode: string,
 	errorMessage: string,
-	_maxSize: number,
-	_maxFiles: number,
 ): { message: string; details: string } {
 	switch (errorCode) {
 		case "file-too-large":
@@ -193,8 +191,6 @@ export function Dropzone({
 					file,
 					error.code,
 					error.message,
-					maxSize,
-					maxFiles,
 				);
 				errorMessages.push({
 					type: "validation_error",

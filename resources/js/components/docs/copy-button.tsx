@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Event } from '@/lib/events';
 import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function copyToClipboardWithMeta(value: string, event?: Event) {
     navigator.clipboard.writeText(value);
 }

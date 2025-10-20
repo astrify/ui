@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const eventSchema = z.object({
+export const eventSchema = z.object({
     name: z.enum([
         'copy_npm_command',
         'copy_usage_import_code',

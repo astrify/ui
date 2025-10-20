@@ -15,6 +15,8 @@ import { Separator } from '@/components/ui/separator';
 import { Upload, FileText, Cloud, Shield, Zap } from 'lucide-react';
 import { UploadPreview, UploadPreviewSource, ImageUploadDemo, ImageUploadDemoSource } from '@/components/previews/upload-preview';
 
+A complete file upload module for S3-compatible storage (Amazon S3, MinIO, DigitalOcean Spaces, etc.) with Laravel backend integration. Features drag & drop upload, real-time progress tracking, client-side file validation, and secure signed URL uploads.
+
 ## Multi-file Upload
 
 Upload multiple files with drag & drop support, progress tracking, and error handling.
@@ -44,12 +46,11 @@ This command will install the necessary JavaScript dependencies, shadcn/ui compo
 Reference the SignedUrlController in your routes file
 
 ```php
-Route::post('/upload/signed-url',
-    \App\Http\Controllers\Astrify\SignedUrlController::class
-)
-// if the environment is public be sure to require auth
-//->middleware(['auth'])
-->name('upload.signed-url');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/upload/signed-url',
+        \App\Http\Controllers\Astrify\SignedUrlController::class
+    )->name('upload.signed-url');
+});
 ```
 
 ### 3: Install Laravel Dependencies
@@ -234,34 +235,36 @@ This usage example provides a full page Inertia component. It integrates the upl
 </ComponentSourceChild>
 
 <ComponentSourceChild language="php" title="routes/web.php">
-{`Route::get('/upload', function () {
-    return Inertia::render('inertia-upload-example');
-})->name('upload.index');
+{`Route::middleware(['auth'])->group(function () {
+    Route::get('/upload', function () {
+        return Inertia::render('inertia-upload-example');
+    })->name('upload.index');
 
-Route::post('/upload', function (\\Illuminate\\Http\\Request $request) {
-  // Validate the incoming request
-  $validated = $request->validate([
-      'name' => 'required|string|max:255',
-      'uploadedFiles' => 'required|array|min:1',
-      'uploadedFiles.*.id' => 'required|string',
-      'uploadedFiles.*.name' => 'required|string',
-      'uploadedFiles.*.sha256' => 'required|string',
-      'uploadedFiles.*.size' => 'required|integer|min:0',
-      'uploadedFiles.*.type' => 'required|string',
-  ]);
+    Route::post('/upload', function (\\Illuminate\\Http\\Request $request) {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'uploadedFiles' => 'required|array|min:1',
+            'uploadedFiles.*.id' => 'required|string',
+            'uploadedFiles.*.name' => 'required|string',
+            'uploadedFiles.*.sha256' => 'required|string',
+            'uploadedFiles.*.size' => 'required|integer|min:0',
+            'uploadedFiles.*.type' => 'required|string',
+        ]);
 
-  \\Illuminate\\Support\\Facades\\Log::info('Document creation request received', [
-      'name' => $validated['name'],
-      'uploaded_files' => $validated['uploadedFiles'],
-  ]);
+        \\Illuminate\\Support\\Facades\\Log::info('Document creation request received', [
+            'name' => $validated['name'],
+            'uploaded_files' => $validated['uploadedFiles'],
+        ]);
 
-  return back()->with('success', 'Files uploaded successfully');
-})->name('upload.store');`}
+        return back()->with('success', 'Files uploaded successfully');
+    })->name('upload.store');
+});`}
 </ComponentSourceChild>
 
 ## Security Notes
 
-This module is designed to ensure secure file uploads to your S3 bucket. Here’s an overview of the process:
+This module is designed to ensure secure file uploads to your S3 bucket. Here's an overview of the process:
 
 1. **Private bucket configuration:**
    Your S3 bucket should be configured as **private**. This prevents users from uploading or accessing files directly and ensures all access goes through temporary signed URLs issued by your Laravel application.
@@ -284,4 +287,14 @@ This module is designed to ensure secure file uploads to your S3 bucket. Here’
 6. **Tamper protection:**
    If the client modifies any claims in the signed URL, the signature becomes invalid and the S3 storage will reject the upload.
 
-> **Next Steps:** Try implementing the upload component in your application and customize it to match your specific requirements.
+<Alert className="mt-8">
+    <Shield className="h-4 w-4" />
+    <AlertTitle>Secure Context Required</AlertTitle>
+    <AlertDescription>
+        This module uses the Web Crypto API for SHA256 hashing, which requires a **secure context**. The upload module will work on:
+        - ✅ `https://` (production with HTTPS)
+        - ✅ `http://localhost` or `http://127.0.0.1` (local development)
+        - ❌ `http://192.168.x.x` (local network over HTTP)
+        - ❌ Any non-HTTPS remote access
+    </AlertDescription>
+</Alert>

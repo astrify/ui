@@ -86,7 +86,7 @@ const modules: Module[] = [
 export function ModulesSection() {
     return (
         <section className="relative z-10">
-            <div className="mr-auto ml-auto max-w-7xl pt-16 pr-6 pb-16 pl-6 lg:px-8">
+            <div className="mr-auto ml-auto max-w-7xl px-6 py-8 lg:py-12 lg:px-8">
                 <div className="relative overflow-hidden rounded-2xl bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900">
                     {/* Decorative background */}
                     <div aria-hidden="true" className="pointer-events-none absolute inset-0">

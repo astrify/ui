@@ -18,7 +18,7 @@ export default function JsonTableExample() {
                 <div>
                     <h1 className="text-xl font-bold">JSON Table Example</h1>
                     <p className="mb-4 text-sm">
-                        This table uses JSON requests for it's data instead of Inertia requests. Useful when you need multiple tables on a single page
+                        This table uses JSON requests for its data instead of Inertia requests. Useful when you need multiple tables on a single page
                         or don't want to tie the pagination to the rest of the page.
                     </p>
                 </div>

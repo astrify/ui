@@ -8,7 +8,7 @@ import { Clock, Package, Rocket, ShieldCheck, Wrench, Zap } from 'lucide-react';
 export function HeroSection() {
     return (
         <section className="relative z-10">
-            <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+            <div className="mx-auto max-w-7xl px-6 py-12 lg:py-20 lg:px-8">
                 <Badge variant="secondary" className="inline-flex items-center gap-2">
                     <Rocket className="h-3.5 w-3.5" />
                     Free Full-Stack Modules — Available Now!
@@ -30,8 +30,8 @@ export function HeroSection() {
                                 </Link>
                             </Button>
 
-                            <Button asChild variant="outline" size="lg" className="inline-flex items-center gap-2 dark:text-zinc-50">
-                                <a href="./#template">
+                            <Button asChild variant="outline" size="lg" className="text-foreground">
+                                <a href="#template">
                                     <Clock className="h-4 w-4" />
                                     Starter Kit — Coming Soon
                                 </a>

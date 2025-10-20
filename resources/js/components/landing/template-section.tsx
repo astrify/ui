@@ -38,7 +38,7 @@ const starterKitFeatures = [
 export function TemplateSection() {
     return (
         <section className="relative z-10" id="template">
-            <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+            <div className="mx-auto max-w-7xl px-6 py-12 lg:py-20 lg:px-8">
                 <div className="mx-auto max-w-3xl text-center">
                     <h2 className="text-3xl font-semibold tracking-tight text-foreground">The Astrify Starter Kit</h2>
                     <p className="mt-3 text-base text-muted-foreground">

@@ -76,7 +76,7 @@ This usage example loads data via Inertia requests. As you paginate this table t
                   <div>
                       <h1 className="text-xl font-bold">Inertia Table</h1>
                       <p className="mb-4 text-sm">
-                          This table loads it's data via Inertia requests. As you paginate this table the page number is reflected in the address bar.
+                          This table loads its data via Inertia requests. As you paginate this table the page number is reflected in the address bar.
                       </p>
                   </div>
                   <PaginatedTable
@@ -99,16 +99,18 @@ This usage example loads data via Inertia requests. As you paginate this table t
 </ComponentSourceChild>
 
 <ComponentSourceChild language="php" title="routes/web.php">
-{`Route::get('inertia-table-example', function () {
-    $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
-        ->orderBy('id', 'desc')
-        ->paginate(10)
-        ->onEachSide(1);
+{`Route::middleware(['auth'])->group(function () {
+    Route::get('inertia-table-example', function () {
+        $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->onEachSide(1);
 
-    return Inertia::render('inertia-table-example', [
-        'users' => $users,
-    ]);
-})->name('table.index');`}
+        return Inertia::render('inertia-table-example', [
+            'users' => $users,
+        ]);
+    })->name('table.index');
+});`}
 </ComponentSourceChild>
 
 

@@ -1,3 +1,4 @@
+import { Upload } from '@/components/astrify/upload';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
@@ -28,7 +29,17 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    <Upload
+                        config={{
+                            signedUrlEndpoint: '/upload/signed-url',
+                            maxFiles: 5,
+                            maxSize: 10 * 1024 * 1024, // 10MB
+                            accept: {
+                                'image/*': ['.png', '.jpeg', '.jpg'],
+                                'application/pdf': ['.pdf'],
+                            },
+                        }}
+                    />
                 </div>
             </div>
         </AppLayout>

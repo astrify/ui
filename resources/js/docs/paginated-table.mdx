@@ -1,0 +1,149 @@
+---
+title: Paginated Table
+description: A complete paginated table solution integrated with Laravel Inertia.js, featuring numeric and simple pagination styles with seamless backend integration.
+date: 2025-09-30
+label: Paginated Table
+tags: [table, pagination, inertia, laravel, component]
+category: Modules
+---
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Table, ListOrdered, Database, Zap } from 'lucide-react';
+import { TablePreview, PaginatedTablePreviewSource } from '@/components/previews/table-preview';
+
+This module wraps the [Shadcn/UI Table](https://ui.shadcn.com/docs/components/table) components with Laravel's default paginator. The provided integration example uses inertia as the data source.
+
+<ComponentPreview component={<TablePreview />} code={PaginatedTablePreviewSource} title="paginated-table-example.tsx" language="tsx" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://astrify.com/r/paginated-table.json
+```
+
+## Usage
+
+This usage example loads data via Inertia requests. As you paginate this table the page number would be reflected in the address bar. To load data via JSON fetch requests see the [Json Table Module](./json-table).
+
+<ComponentSourceChild language="tsx" title="resources/js/pages/inertia-table-example.tsx">
+{`import { PaginatedTable } from '@/components/astrify/paginated-table';
+  import AppLayout from '@/layouts/app-layout';
+  import type { BreadcrumbItem } from '@/types';
+  import { Head, router } from '@inertiajs/react';
+
+  const breadcrumbs: BreadcrumbItem[] = [
+      {
+          title: 'Inertia Table Example',
+          href: '/inertia-table-example',
+      },
+  ];
+
+  interface User {
+      id: number;
+      name: string;
+      email: string;
+      created_at: string;
+  }
+
+  interface Props {
+      users: {
+          data: User[];
+          current_page: number;
+          last_page: number;
+          total: number;
+          links: Array<{
+              url: string | null;
+              label: string;
+              active: boolean;
+          }>;
+      };
+  }
+
+  export default function InertiaTableExample({ users }: Props) {
+      const handlePageChange = (url: string | null) => {
+          if (!url) return;
+          router.get(url, {}, { preserveScroll: true, preserveState: true });
+      };
+
+      return (
+          <AppLayout breadcrumbs={breadcrumbs}>
+              <Head title="Inertia Table Example" />
+              <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                  <div>
+                      <h1 className="text-xl font-bold">Inertia Table</h1>
+                      <p className="mb-4 text-sm">
+                          This table loads it's data via Inertia requests. As you paginate this table the page number is reflected in the address bar.
+                      </p>
+                  </div>
+                  <PaginatedTable
+                      columns={['ID', 'Name', 'Email', 'Created']}
+                      data={users.data.map((user) => [user.id, user.name, user.email, new Date(user.created_at).toLocaleDateString()])}
+                      pagination={{
+                          type: 'numeric',
+                          currentPage: users.current_page,
+                          lastPage: users.last_page,
+                          links: users.links,
+                          onChangePage: handlePageChange, // Our custom page-change handler
+                          total: users.total,
+                      }}
+                  />
+              </div>
+          </AppLayout>
+      );
+  }
+`}
+</ComponentSourceChild>
+
+<ComponentSourceChild language="php" title="routes/web.php">
+{`Route::get('inertia-table-example', function () {
+    $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
+        ->orderBy('id', 'desc')
+        ->paginate(10)
+        ->onEachSide(1);
+
+    return Inertia::render('inertia-table-example', [
+        'users' => $users,
+    ]);
+})->name('table.index');`}
+</ComponentSourceChild>
+
+
+Optionally seed your database with test data to see the pagination in action:
+```php
+artisan tinker
+\App\Models\User::factory(100)->create();
+```
+
+## Props
+
+### PaginatedTable
+
+| Prop          | Type                         | Description                                                               |
+| ------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `columns`     | `string[]`                   | Array of column header labels                                             |
+| `data`        | `(string \| number)[][]`     | 2D array of table data rows                                               |
+| `pagination`  | `PaginatorConfig`            | Pagination configuration object                                           |
+| `placeholder` | `React.ReactNode` (optional) | Custom content to show when data is empty (loading, errors, empty states) |
+
+### PaginatorConfig
+
+| Prop           | Type                            | Description                                   |
+| -------------- | ------------------------------- | --------------------------------------------- |
+| `type`         | `"simple" \| "numeric"`         | The pagination style to use                   |
+| `currentPage`  | `number`                        | Current page number                           |
+| `lastPage`     | `number`                        | Total number of pages                         |
+| `links`        | `PaginationLinkType[]`          | Array of pagination link objects from Laravel |
+| `onChangePage` | `(url: string \| null) => void` | Callback function when page changes           |
+| `total`        | `number` (optional)             | Total number of records                       |
+
+### PaginationLinkType
+
+| Prop     | Type              | Description                     |
+| -------- | ----------------- | ------------------------------- |
+| `url`    | `string \| null`  | URL for the pagination link     |
+| `label`  | `string`          | Label text for the link         |
+| `active` | `boolean`         | Whether this link is active     |

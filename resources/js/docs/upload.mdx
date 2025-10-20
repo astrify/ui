@@ -1,0 +1,287 @@
+---
+title: File Upload Module
+description: A complete file upload solution integrated with Laravel Inertia.js, featuring drag & drop, S3 storage, and comprehensive validation.
+date: 2025-09-29
+label: File Upload
+tags: [upload, inertia, s3, laravel, component]
+category: Modules
+---
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Upload, FileText, Cloud, Shield, Zap } from 'lucide-react';
+import { UploadPreview, UploadPreviewSource, ImageUploadDemo, ImageUploadDemoSource } from '@/components/previews/upload-preview';
+
+## Multi-file Upload
+
+Upload multiple files with drag & drop support, progress tracking, and error handling.
+
+<ComponentPreview component={<UploadPreview />} code={UploadPreviewSource} title="upload-demo.tsx" language="tsx" />
+
+## Single Image Upload
+
+Upload a single image file with preview and validation.
+
+<ComponentPreview component={<ImageUploadDemo />} code={ImageUploadDemoSource} title="image-upload-demo.tsx" language="tsx" />
+
+## Installation
+
+### 1: Install the Module
+
+You can install the upload module using the shadcn registry system:
+
+```bash
+npx shadcn@latest add https://astrify.com/r/upload.json
+```
+
+This command will install the necessary JavaScript dependencies, shadcn/ui components, and add the SignedUrlController.php to your application.
+
+### 2: Configure Routes
+
+Reference the SignedUrlController in your routes file
+
+```php
+Route::post('/upload/signed-url',
+    \App\Http\Controllers\Astrify\SignedUrlController::class
+)
+// if the environment is public be sure to require auth
+//->middleware(['auth'])
+->name('upload.signed-url');
+```
+
+### 3: Install Laravel Dependencies
+
+Install the Flysystem S3 package via the Composer package manager:
+
+```bash
+composer require league/flysystem-aws-s3-v3:^3.0
+```
+
+### 4: Configure your S3 Storage
+
+For local development we recommend using [MinIO](https://min.io/) for locally-hosted S3-compatible storage. There are many ways to run MinIO on your machine but the remaining steps will assume you ran it in Docker with the following command:
+
+```bash
+docker run \
+  -p 9000:9000 -p 9001:9001 \
+  -v "$HOME/minio-data:/data" \
+  quay.io/minio/minio server /data --console-address ":9001"
+```
+
+Next login to the MinIO console at [http://localhost:9001](http://localhost:9001) using the default credentials (`minioadmin` / `minioadmin`) and create a new bucket called `my-bucket`.
+
+Finally set the following environment variables in your `.env` file:
+
+```env
+AWS_BUCKET=my-bucket
+AWS_ACCESS_KEY_ID=minioadmin
+AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_SECRET_ACCESS_KEY=minioadmin
+AWS_DEFAULT_REGION=us-east-1
+AWS_URL=http://127.0.0.1:9000/my-bucket
+AWS_ENDPOINT=http://127.0.0.1:9000
+```
+
+<Alert className="mt-8">
+    <Shield className="h-4 w-4" />
+    <AlertTitle>Pro Tip</AlertTitle>
+    <AlertDescription>
+        If you're using a real Amazon S3 bucket don't forget to configure the bucket's CORS policy to allow POST requests from your domain.
+    </AlertDescription>
+</Alert>
+
+## Usage
+
+This usage example provides a full page Inertia component. It integrates the upload module into an Inertia form submission. It demonstrates how to pass references for the successfully uploaded files to the Inertia useForm hook and how to prevent form submission until all file uploads are completed. The route examples shows how to validate and receive the files in your Laravel route or controller.
+
+<ComponentSourceChild language="tsx" title="resources/js/pages/inertia-upload-example.tsx">
+{`import { Dropzone, Errors, Header, List } from '@/components/astrify/upload';
+  import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
+  import AppLayout from '@/layouts/app-layout';
+  import { type BreadcrumbItem } from '@/types';
+  import { FileUploadProvider, useFileUpload } from '@astrify/react-s3-upload';
+  import { Head, useForm } from '@inertiajs/react';
+  import { LoaderCircle } from 'lucide-react';
+  import type { FormEventHandler } from 'react';
+  import { toast } from 'sonner';
+
+  const breadcrumbs: BreadcrumbItem[] = [
+      {
+          title: 'Upload Example',
+          href: '/upload',
+      },
+  ];
+
+  export default function InertiaUploadExample() {
+      return (
+          <AppLayout breadcrumbs={breadcrumbs}>
+              <Head title="Upload" />
+              <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                  <FileUploadProvider
+                      config={{
+                          signedUrlEndpoint: '/upload/signed-url',
+                          maxFiles: 10,
+                          maxSize: 10 * 1024 * 1024, // 10MB
+                          accept: {
+                              'image/*': ['.png', '.jpeg', '.jpg'],
+                              'application/pdf': ['.pdf'],
+                          },
+                      }}
+                  >
+                      <FormContent submitEndpoint={'/upload'} />
+                  </FileUploadProvider>
+              </div>
+          </AppLayout>
+      );
+  }
+
+  type UploadForm = {
+      name: string;
+      uploadedFiles: Array<{
+          id: string;
+          name: string;
+          sha256: string;
+          size: number;
+          type: string;
+      }>;
+  };
+
+  function FormContent({ submitEndpoint = '/upload' }: { submitEndpoint: string }) {
+      const { files, hasComplete, hasPending, hasUploading, hasErrors, removeAll } = useFileUpload();
+
+      const { data, setData, post, processing, errors, reset, transform } = useForm<UploadForm>({
+          name: '',
+          uploadedFiles: [],
+      });
+
+      const submitForm: FormEventHandler = (e) => {
+          e.preventDefault();
+
+          // Extract only completed files for submission
+          const completedFiles = files.filter((f) => f.status === 'complete');
+
+          // Prepare the uploaded files data
+          const uploadedFiles = completedFiles.map((f) => ({
+              id: f.id,
+              name: f.name,
+              sha256: f.sha256,
+              size: f.size,
+              type: f.type,
+          }));
+
+          // Transform the form data to include uploaded files and submit
+          transform((formData) => ({
+              ...formData,
+              uploadedFiles,
+          }));
+
+          // Submit using Inertia
+          post(submitEndpoint, {
+              onFinish: () => {
+                  // Reset the name field after successful submission
+                  reset('name');
+                  removeAll(); // Clear all files from the upload context
+                  toast.success('Form submitted successfully', {
+                      richColors: true,
+                  });
+              },
+          });
+      };
+
+      // Enable submit only when all uploads are complete and form has a name
+      const canSubmit = hasComplete && !hasPending && !hasUploading && !hasErrors && data.name.length > 0;
+
+      return (
+          <form onSubmit={submitForm} className="space-y-6">
+              <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="Enter your name"
+                      required={true}
+                      value={data.name}
+                      onChange={(e) => setData('name', e.target.value)}
+                  />
+                  {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+              </div>
+
+              <div className="space-y-2">
+                  <Label>Attachments</Label>
+                  <div className="space-y-4">
+                      <Dropzone />
+                      <Header />
+                      <Errors />
+                      <List showImagePreviews={false} />
+                  </div>
+                  {errors.uploadedFiles && <p className="text-sm text-destructive">{errors.uploadedFiles}</p>}
+              </div>
+
+              <Button type="submit" disabled={!canSubmit || processing} className="w-full sm:w-auto">
+                  {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                  Submit with {files.filter((f) => f.status === 'complete').length} files
+              </Button>
+          </form>
+      );
+  }
+`}
+</ComponentSourceChild>
+
+<ComponentSourceChild language="php" title="routes/web.php">
+{`Route::get('/upload', function () {
+    return Inertia::render('inertia-upload-example');
+})->name('upload.index');
+
+Route::post('/upload', function (\\Illuminate\\Http\\Request $request) {
+  // Validate the incoming request
+  $validated = $request->validate([
+      'name' => 'required|string|max:255',
+      'uploadedFiles' => 'required|array|min:1',
+      'uploadedFiles.*.id' => 'required|string',
+      'uploadedFiles.*.name' => 'required|string',
+      'uploadedFiles.*.sha256' => 'required|string',
+      'uploadedFiles.*.size' => 'required|integer|min:0',
+      'uploadedFiles.*.type' => 'required|string',
+  ]);
+
+  \\Illuminate\\Support\\Facades\\Log::info('Document creation request received', [
+      'name' => $validated['name'],
+      'uploaded_files' => $validated['uploadedFiles'],
+  ]);
+
+  return back()->with('success', 'Files uploaded successfully');
+})->name('upload.store');`}
+</ComponentSourceChild>
+
+## Security Notes
+
+This module is designed to ensure secure file uploads to your S3 bucket. Here’s an overview of the process:
+
+1. **Private bucket configuration:**
+   Your S3 bucket should be configured as **private**. This prevents users from uploading or accessing files directly and ensures all access goes through temporary signed URLs issued by your Laravel application.
+
+2. **Requesting a signed URL:**
+   The client requests a signed URL from the `SignedUrlController`, providing metadata about the file(s) to be uploaded: name, size, type, and SHA256 hash.
+
+3. **Server-side validation:**
+   Before issuing a signed URL, the server validates the provided metadata. If any check fails, the request is denied.
+    - File size (must not exceed configured limits)
+    - File type (must match allowed MIME types)
+    - SHA256 hash (used for file integrity verification)
+
+4. **URL generation:**
+   If validation passes, the server returns a signed URL containing the verified metadata.
+
+5. **Upload enforcement:**
+   If the client attempts to upload a file that does not match the metadata encoded in the signed URL, the S3 storage will reject the upload.
+
+6. **Tamper protection:**
+   If the client modifies any claims in the signed URL, the signature becomes invalid and the S3 storage will reject the upload.
+
+> **Next Steps:** Try implementing the upload component in your application and customize it to match your specific requirements.

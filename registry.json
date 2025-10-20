@@ -1,0 +1,68 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "@astrify/ui",
+    "homepage": "https://astrify.com",
+    "items": [
+        {
+            "name": "upload",
+            "type": "registry:example",
+            "title": "Astrify Upload Module",
+            "description": "A complete file upload module for Laravel, React, and Inertia.js",
+            "dependencies": ["react-dropzone", "lucide-react", "clsx", "tailwind-merge", "sonner", "@inertiajs/react"],
+            "registryDependencies": ["input", "label", "button", "https://astrify.github.io/react-s3-upload/r/upload.json"],
+            "files": [
+                {
+                    "path": "app/Http/Controllers/Astrify/SignedUrlController.php",
+                    "type": "registry:file",
+                    "target": "app/Http/Controllers/Astrify/SignedUrlController.php"
+                }
+            ],
+            "tailwind": {
+                "config": {}
+            },
+            "cssVars": {},
+            "categories": ["upload", "laravel", "inertia"],
+            "docs": "\n--------------------------------------------------------------------------\n Remaining Installation Steps:\n--------------------------------------------------------------------------\n\n1. Configure Routes\n\nAdd a route for the SignedUrlController to your routes file:\n\nRoute::post('/upload/signed-url',\n    \\App\\Http\\Controllers\\Astrify\\SignedUrlController::class\n)->name('upload.signed-url'); // if the environment is public be sure to require auth\n\n2. Install Laravel Dependencies\n\nInstall the Flysystem S3 package via the Composer package manager:\n\ncomposer require league/flysystem-aws-s3-v3:^3.0\n\n3. Configure your S3 Storage\n\nFor local development we recommend using MinIO as a self-hosted S3-compatible storage solution. Set the required AWS environment variables in your .env file.\n"
+        },
+        {
+            "name": "paginated-table",
+            "type": "registry:component",
+            "title": "Paginated Table",
+            "description": "A table component with built-in pagination support for numeric and simple pagination styles",
+            "dependencies": ["lucide-react"],
+            "registryDependencies": ["table", "pagination"],
+            "files": [
+                {
+                    "path": "resources/js/components/astrify/paginated-table.tsx",
+                    "type": "registry:component"
+                }
+            ],
+            "tailwind": {
+                "config": {}
+            },
+            "cssVars": {},
+            "categories": ["table", "pagination", "inertia", "laravel"],
+            "docs": "For a usage example, visit https://astrify.com/docs/paginated-table"
+        },
+        {
+            "name": "json-table",
+            "type": "registry:component",
+            "title": "JSON Table",
+            "description": "A table component that fetches and displays paginated JSON data from an API endpoint",
+            "dependencies": ["lucide-react"],
+            "registryDependencies": ["https://astrify.com/r/paginated-table.json"],
+            "files": [
+                {
+                    "path": "resources/js/components/astrify/json-table.tsx",
+                    "type": "registry:component"
+                }
+            ],
+            "tailwind": {
+                "config": {}
+            },
+            "cssVars": {},
+            "categories": ["table", "pagination", "data-fetching", "inertia", "laravel"],
+            "docs": "For a usage example, visit https://astrify.com/docs/json-table"
+        }
+    ]
+}

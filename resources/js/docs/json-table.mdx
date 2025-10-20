@@ -1,0 +1,116 @@
+---
+title: Json Table
+description: A complete paginated table solution integrated with Laravel Inertia.js, featuring numeric and simple pagination styles with seamless backend integration using JSON data sources.
+date: 2025-09-30
+label: JSON Table
+tags: [table, pagination, inertia, laravel, component]
+category: Modules
+---
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Table, ListOrdered, Database, Zap } from 'lucide-react';
+import { TablePreview, JsonTablePreviewSource } from '@/components/previews/table-preview';
+
+This module wraps the [Paginated Table](./paginated-table) module with a component that fetches data from the given URL and expects the response to be in the same format as Laravel's paginator json output.
+
+<ComponentPreview component={<TablePreview paginationType="simple" />} code={JsonTablePreviewSource} title="json-table-example.tsx" language="tsx" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://astrify.com/r/json-table.json
+```
+
+## Usage
+
+This usage example loads data via JSON fetch requests. To load data via Inertia requests see the [Paginated Table Module](./paginated-table).
+
+<ComponentSourceChild language="tsx" title="resources/js/pages/json-table-example.tsx">
+{`import { JsonTable } from '@/components/astrify/json-table';
+  import AppLayout from '@/layouts/app-layout';
+  import type { BreadcrumbItem } from '@/types';
+  import { Head } from '@inertiajs/react';
+
+  const breadcrumbs: BreadcrumbItem[] = [
+      {
+          title: 'JSON Table Example',
+          href: '/json-table-example',
+      },
+  ];
+
+  export default function JsonTableExample() {
+      return (
+          <AppLayout breadcrumbs={breadcrumbs}>
+              <Head title="JSON Table Example" />
+              <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                  <div>
+                      <h1 className="text-xl font-bold">JSON Table Example</h1>
+                      <p className="mb-4 text-sm">
+                          This table uses JSON requests for it's data instead of Inertia requests. Useful when you need multiple tables on a single page
+                          or don't want to tie the pagination to the rest of the page.
+                      </p>
+                  </div>
+
+                  <JsonTable
+                      url="/json-table-data-example"
+                      columns={[
+                          { key: 'id', label: 'ID' },
+                          { key: 'name', label: 'Name' },
+                          { key: 'email', label: 'Email' },
+                          { key: 'created_at', label: 'Created' },
+                      ]}
+                      paginationType="simple"
+                      formatCell={(key, value) => {
+                          if (key === 'created_at') return new Date(value).toLocaleDateString();
+                          return value;
+                      }}
+                  />
+              </div>
+          </AppLayout>
+      );
+  }
+
+`}
+</ComponentSourceChild>
+
+<ComponentSourceChild language="php" title="routes/web.php">
+{`Route::get('/json-table-data-example', function () {
+      $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
+          ->orderBy('id', 'desc')
+          ->paginate(10);
+
+      return response()->json($users);
+  });
+
+  Route::get('/json-table-example', function () {
+      return Inertia::render('json-table-example');
+  });`}
+</ComponentSourceChild>
+
+Optionally seed your database with test data to see the pagination in action:
+```php
+artisan tinker
+\App\Models\User::factory(100)->create();
+```
+
+## Props
+
+### JsonTable
+
+| Prop              | Type                                              | Description                                                        |
+| ----------------- | ------------------------------------------------- | ------------------------------------------------------------------ |
+| `url`             | `string`                                          | The endpoint URL to fetch paginated data from                      |
+| `columns`         | `JsonTableColumn[]`                               | Array of column definitions with `key` and `label` properties      |
+| `paginationType`  | `"simple" \| "numeric"` (optional)                | The pagination style to use (defaults to `"numeric"`)              |
+| `formatCell`      | `(key: string, value: any) => string \| number` (optional) | Optional function to format cell values before display     |
+
+### JsonTableColumn
+
+| Prop    | Type     | Description                                |
+| ------- | -------- | ------------------------------------------ |
+| `key`   | `string` | The key in the data object to display      |
+| `label` | `string` | The column header label                    |

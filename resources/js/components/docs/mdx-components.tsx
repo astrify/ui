@@ -26,7 +26,7 @@ export const mdxComponents = {
             <h2
                 id={props.children?.toString().replace(/ /g, '-').replace(/'/g, '').replace(/\?/g, '').toLowerCase()}
                 className={cn(
-                    'font-heading mt-12 scroll-m-28 text-2xl font-medium tracking-tight first:mt-0 lg:mt-20 [&+p]:!mt-4 *:[code]:text-2xl',
+                    'font-heading mt-12 scroll-m-28 text-2xl font-medium tracking-tight first:mt-0 [&+p]:!mt-4 *:[code]:text-2xl',
                     className,
                 )}
                 {...props}
@@ -82,16 +82,16 @@ export const mdxComponents = {
     ol: ({ className, ...props }: React.ComponentProps<'ol'>) => <ol className={cn('my-6 ml-6 list-decimal', className)} {...props} />,
     li: ({ className, ...props }: React.ComponentProps<'li'>) => <li className={cn('mt-2', className)} {...props} />,
     blockquote: ({ className, ...props }: React.ComponentProps<'blockquote'>) => (
-        <blockquote className={cn('mt-6 border-l-2 pl-6 italic', className)} {...props} />
+        <blockquote className={cn('mt-6 border-l-2 border-border pl-6 italic text-muted-foreground', className)} {...props} />
     ),
     img: ({ className, alt, ...props }: React.ComponentProps<'img'>) => <img className={cn('rounded-md', className)} alt={alt} {...props} />,
-    hr: ({ ...props }: React.ComponentProps<'hr'>) => <hr className="my-4 md:my-8" {...props} />,
+    hr: ({ ...props }: React.ComponentProps<'hr'>) => <hr className="my-4 border-border md:my-8" {...props} />,
     table: ({ className, ...props }: React.ComponentProps<'table'>) => (
         <div className="my-6 w-full overflow-y-auto">
             <table className={cn('relative w-full overflow-hidden border-none text-sm', className)} {...props} />
         </div>
     ),
-    tr: ({ className, ...props }: React.ComponentProps<'tr'>) => <tr className={cn('last:border-b-none m-0 border-b', className)} {...props} />,
+    tr: ({ className, ...props }: React.ComponentProps<'tr'>) => <tr className={cn('last:border-b-none m-0 border-b border-border', className)} {...props} />,
     th: ({ className, ...props }: React.ComponentProps<'th'>) => (
         <th className={cn('px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right', className)} {...props} />
     ),
@@ -152,7 +152,7 @@ export const mdxComponents = {
         if (typeof props.children === 'string') {
             return (
                 <code
-                    className={cn('relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] outline-none', className)}
+                    className={cn('relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] text-foreground outline-none', className)}
                     {...props}
                 />
             );

@@ -50,7 +50,7 @@ This usage example loads data via JSON fetch requests. To load data via Inertia 
                   <div>
                       <h1 className="text-xl font-bold">JSON Table Example</h1>
                       <p className="mb-4 text-sm">
-                          This table uses JSON requests for it's data instead of Inertia requests. Useful when you need multiple tables on a single page
+                          This table uses JSON requests for its data instead of Inertia requests. Useful when you need multiple tables on a single page
                           or don't want to tie the pagination to the rest of the page.
                       </p>
                   </div>
@@ -78,17 +78,19 @@ This usage example loads data via JSON fetch requests. To load data via Inertia 
 </ComponentSourceChild>
 
 <ComponentSourceChild language="php" title="routes/web.php">
-{`Route::get('/json-table-data-example', function () {
-      $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
-          ->orderBy('id', 'desc')
-          ->paginate(10);
+{`Route::middleware(['auth'])->group(function () {
+    Route::get('/json-table-data-example', function () {
+        $users = \\App\\Models\\User::select('id', 'name', 'email', 'created_at')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
-      return response()->json($users);
-  });
+        return response()->json($users);
+    });
 
-  Route::get('/json-table-example', function () {
-      return Inertia::render('json-table-example');
-  });`}
+    Route::get('/json-table-example', function () {
+        return Inertia::render('json-table-example');
+    });
+});`}
 </ComponentSourceChild>
 
 Optionally seed your database with test data to see the pagination in action:

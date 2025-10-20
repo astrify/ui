@@ -40,12 +40,12 @@ export function ComponentPreviewTabs({
                     )}
                 </div>
             </Tabs>
-            <div data-tab={tab} className="relative rounded-lg border data-[tab=code]:border-code md:-mx-1">
+            <div data-tab={tab} className="relative rounded-lg border border-border data-[tab=code]:border-code md:-mx-1">
                 <div data-slot="preview" data-active={tab === 'preview'} className="invisible data-[active=true]:visible">
                     <div
                         data-align={align}
                         className={cn(
-                            'preview flex h-[450px] w-full justify-center p-10 data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start',
+                            'preview flex h-[450px] w-full justify-center bg-background p-10 data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start',
                         )}
                     >
                         {component}

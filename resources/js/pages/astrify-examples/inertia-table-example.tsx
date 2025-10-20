@@ -44,7 +44,7 @@ export default function InertiaTableExample({ users }: Props) {
                 <div>
                     <h1 className="text-xl font-bold">Inertia Table</h1>
                     <p className="mb-4 text-sm">
-                        This table loads it's data via Inertia requests. As you paginate this table the page number is reflected in the address bar.
+                        This table loads its data via Inertia requests. As you paginate this table the page number is reflected in the address bar.
                     </p>
                 </div>
                 <PaginatedTable

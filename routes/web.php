@@ -126,7 +126,8 @@ Route::get('json-combobox-example', function () {
     $defaultUser = \App\Models\User::first();
 
     return Inertia::render('astrify-examples/json-combobox-example', [
-        'defaultUserId' => $defaultUser?->id,
+        'defaultUserId' => $defaultUser ? (string) $defaultUser->id : null,
+        'defaultUserEmail' => $defaultUser?->email,
     ]);
 });
 

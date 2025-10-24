@@ -1,6 +1,7 @@
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { PaginatedTable, type PaginationType } from './paginated-table';
+import { Spinner } from '@/components/ui/spinner';
 
 interface JsonTableColumn {
     key: string;
@@ -67,7 +68,7 @@ export function JsonTable({ url, columns, paginationType = 'numeric', formatCell
     if (loading && !data) {
         placeholder = (
             <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
-                <Loader2 className="mb-4 size-12 animate-spin text-muted-foreground/50" />
+                <Spinner className="mb-4 size-12 text-muted-foreground/50" />
                 <h3 className="mb-1 text-sm font-medium text-muted-foreground">Loading data</h3>
             </div>
         );

@@ -1,8 +1,13 @@
 import { JsonCombobox } from '@/components/astrify/json-combobox';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import type { FormEventHandler } from 'react';
+import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,8 +16,36 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function JsonComboboxExample() {
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+type ComboboxForm = {
+    task_name: string;
+    assigned_to: string | null;
+};
+
+interface JsonComboboxExampleProps {
+    defaultUserId?: string | null;
+    defaultUserEmail?: string | null;
+}
+
+export default function JsonComboboxExample({ defaultUserId, defaultUserEmail }: JsonComboboxExampleProps) {
+    const { data, setData, post, processing, errors, reset } = useForm<ComboboxForm>({
+        task_name: '',
+        assigned_to: defaultUserId ?? null,
+    });
+
+    const submitForm: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        post('/json-combobox-example', {
+            onSuccess: () => {
+                reset('task_name');
+                toast.success('Task assigned successfully', {
+                    richColors: true,
+                });
+            },
+        });
+    };
+
+    const canSubmit = data.task_name.length > 0 && data.assigned_to !== null;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -26,49 +59,42 @@ export default function JsonComboboxExample() {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <JsonCombobox
-                        url="/api/users"
-                        placeholder="Select email..."
-                        searchPlaceholder="Search by email..."
-                        valueKey="value"
-                        labelKey="label"
-                        onChange={setSelectedUserId}
-                        className="w-[250px]"
-                    />
+                <form onSubmit={submitForm} className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="task_name">Task Name</Label>
+                        <Input
+                            type="text"
+                            id="task_name"
+                            name="task_name"
+                            placeholder="Enter task name"
+                            required={true}
+                            value={data.task_name}
+                            onChange={(e) => setData('task_name', e.target.value)}
+                        />
+                        {errors.task_name && <p className="text-sm text-destructive">{errors.task_name}</p>}
+                    </div>
 
-                    {selectedUserId && (
-                        <div className="rounded-lg border bg-muted/50 px-4 py-2">
-                            <p className="text-sm text-muted-foreground">
-                                Selected User ID: <span className="font-medium text-foreground">{selectedUserId}</span>
-                            </p>
-                        </div>
-                    )}
-                </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="assigned_to">Assign To</Label>
+                        <JsonCombobox
+                            url="/api/users"
+                            placeholder="Select email..."
+                            searchPlaceholder="Search by email..."
+                            valueKey="value"
+                            labelKey="label"
+                            defaultValue={data.assigned_to || undefined}
+                            defaultLabel={defaultUserEmail || undefined}
+                            onChange={(value) => setData('assigned_to', value)}
+                            className="w-[250px]"
+                        />
+                        {errors.assigned_to && <p className="text-sm text-destructive">{errors.assigned_to}</p>}
+                    </div>
 
-                <div className="mt-4 rounded-lg border p-4">
-                    <h2 className="mb-2 text-sm font-semibold">Features:</h2>
-                    <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                        <li>Server-side email search with debounced queries (300ms)</li>
-                        <li>Starts-with search pattern for better performance</li>
-                        <li>Inline loading spinner during searches</li>
-                        <li>No flickering - previous results stay visible while loading</li>
-                        <li>Error handling with visual feedback</li>
-                        <li>Single-select functionality with user ID as value</li>
-                        <li>Clean, simple email-only display</li>
-                    </ul>
-                </div>
-
-                <div className="mt-4 rounded-lg border bg-blue-500/10 p-4">
-                    <h2 className="mb-2 text-sm font-semibold">Try it out:</h2>
-                    <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                        <li>Type an email to see users whose email starts with your input</li>
-                        <li>Try typing "alice" to match "alice@example.com"</li>
-                        <li>Notice the inline spinner appears on the right of the search input</li>
-                        <li>Notice the 300ms debounce - it waits for you to stop typing</li>
-                        <li>The search uses a starts-with pattern (`search%`), not contains (`%search%`)</li>
-                    </ul>
-                </div>
+                    <Button type="submit" disabled={!canSubmit || processing} className="w-full sm:w-auto">
+                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                        Assign Task
+                    </Button>
+                </form>
             </div>
         </AppLayout>
     );

@@ -50,7 +50,7 @@
             "title": "JSON Table",
             "description": "A table component that fetches and displays paginated JSON data from an API endpoint",
             "dependencies": ["lucide-react"],
-            "registryDependencies": ["https://astrify.com/r/paginated-table.json"],
+            "registryDependencies": ["https://astrify.com/r/paginated-table.json", "spinner"],
             "files": [
                 {
                     "path": "resources/js/components/astrify/json-table.tsx",
@@ -70,7 +70,7 @@
             "title": "JSON Combobox",
             "description": "A searchable combobox component with server-side filtering that fetches options from a JSON API endpoint",
             "dependencies": ["lucide-react"],
-            "registryDependencies": ["button", "command", "popover"],
+            "registryDependencies": ["button", "command", "popover", "spinner"],
             "files": [
                 {
                     "path": "resources/js/components/astrify/json-combobox.tsx",

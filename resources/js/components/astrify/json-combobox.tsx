@@ -1,9 +1,10 @@
-import { Check, ChevronsUpDown, Loader2, AlertCircle } from 'lucide-react';
+import { Check, ChevronsUpDown, AlertCircle } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Spinner } from '@/components/ui/spinner';
 
 interface JsonComboboxOption {
     [key: string]: any;
@@ -17,7 +18,8 @@ interface JsonComboboxProps {
     searchPlaceholder?: string;
     emptyText?: string;
     onChange?: (value: string | null) => void;
-    defaultValue?: string;
+    defaultValue?: string | number;
+    defaultLabel?: string;
     className?: string;
 }
 
@@ -30,11 +32,18 @@ export function JsonCombobox({
     emptyText = 'No results found.',
     onChange,
     defaultValue,
+    defaultLabel,
     className,
 }: JsonComboboxProps) {
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState<string>(defaultValue || '');
-    const [options, setOptions] = useState<JsonComboboxOption[]>([]);
+    const [value, setValue] = useState<string>(defaultValue ? String(defaultValue) : '');
+
+    // Initialize options with default value if provided
+    const initialOptions = defaultValue && defaultLabel
+        ? [{ [valueKey]: String(defaultValue), [labelKey]: defaultLabel }]
+        : [];
+
+    const [options, setOptions] = useState<JsonComboboxOption[]>(initialOptions);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -51,7 +60,28 @@ export function JsonCombobox({
                 const response = await fetch(fetchUrl);
                 if (!response.ok) throw new Error('Failed to fetch options');
                 const jsonData = await response.json();
-                setOptions(Array.isArray(jsonData) ? jsonData : []);
+                const newOptions = Array.isArray(jsonData) ? jsonData : [];
+
+                // Preserve the currently selected option if it's not in the new results
+                setOptions((prevOptions) => {
+                    if (!value) return newOptions;
+
+                    // Check if current value exists in new options
+                    const valueExists = newOptions.some((opt) => String(opt[valueKey]) === value);
+
+                    if (valueExists) {
+                        return newOptions;
+                    }
+
+                    // If not, find it in previous options and prepend it
+                    const selectedOption = prevOptions.find((opt) => String(opt[valueKey]) === value);
+                    if (selectedOption) {
+                        return [selectedOption, ...newOptions];
+                    }
+
+                    return newOptions;
+                });
+
                 setError(null);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred');
@@ -60,7 +90,7 @@ export function JsonCombobox({
                 setLoading(false);
             }
         },
-        [url],
+        [url, value, valueKey],
     );
 
     // Debounced search effect
@@ -86,6 +116,9 @@ export function JsonCombobox({
 
     const selectedOption = options.find((option) => option[valueKey] === value);
 
+    // Extract width class from className prop, default to w-[200px]
+    const widthClass = className?.match(/w-\[[^\]]+\]|w-\d+|w-full|w-fit|w-auto/)?.[0] || 'w-[200px]';
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -93,13 +126,13 @@ export function JsonCombobox({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn('w-[200px] justify-between', className)}
+                    className={cn(widthClass, 'justify-between', className)}
                 >
                     {selectedOption ? selectedOption[labelKey] : placeholder}
                     <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className={cn(widthClass, 'p-0')}>
                 <Command shouldFilter={false}>
                     <div className="relative">
                         <CommandInput
@@ -110,7 +143,7 @@ export function JsonCombobox({
                         />
                         {loading && (
                             <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                                <Loader2 className="size-4 animate-spin text-muted-foreground/50" />
+                                <Spinner className="size-4 text-muted-foreground/50" />
                             </div>
                         )}
                     </div>

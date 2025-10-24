@@ -63,6 +63,26 @@
             "cssVars": {},
             "categories": ["table", "pagination", "data-fetching", "inertia", "laravel"],
             "docs": "The JSON Table component has been installed. For usage instructions, visit https://astrify.com/docs/json-table"
+        },
+        {
+            "name": "json-combobox",
+            "type": "registry:component",
+            "title": "JSON Combobox",
+            "description": "A searchable combobox component with server-side filtering that fetches options from a JSON API endpoint",
+            "dependencies": ["lucide-react"],
+            "registryDependencies": ["button", "command", "popover"],
+            "files": [
+                {
+                    "path": "resources/js/components/astrify/json-combobox.tsx",
+                    "type": "registry:component"
+                }
+            ],
+            "tailwind": {
+                "config": {}
+            },
+            "cssVars": {},
+            "categories": ["combobox", "select", "search", "data-fetching", "inertia", "laravel"],
+            "docs": "The JSON Combobox component has been installed. For usage instructions, visit https://astrify.com/docs/json-combobox"
         }
     ]
 }

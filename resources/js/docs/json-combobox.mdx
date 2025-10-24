@@ -1,0 +1,144 @@
+---
+title: Json Combobox
+description: A searchable combobox component with server-side filtering, seamlessly integrated with Laravel JSON endpoints for dynamic option loading.
+date: 2025-10-23
+label: JSON Combobox
+tags: [combobox, select, search, json, component]
+category: Modules
+---
+
+import { ComponentPreview } from '@/components/docs/component-preview';
+import { ComponentSourceChild } from '@/components/docs/component-source-child';
+import { ComboboxPreview, JsonComboboxPreviewSource } from '@/components/previews/combobox-preview';
+
+A reusable combobox component that fetches and filters options from a JSON API endpoint with debounced server-side search.
+
+<ComponentPreview component={<ComboboxPreview />} code={JsonComboboxPreviewSource} title="json-combobox-example.tsx" language="tsx" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://astrify.com/r/json-combobox.json
+```
+
+## Usage
+
+This component makes JSON fetch requests to load options dynamically based on user search input.
+
+<ComponentSourceChild language="tsx" title="resources/js/pages/json-combobox-example.tsx">
+{`import { JsonCombobox } from '@/components/astrify/json-combobox';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
+import { useState } from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'JSON Combobox Example',
+        href: '/json-combobox-example',
+    },
+];
+
+export default function JsonComboboxExample() {
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="JSON Combobox Example" />
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+                <div>
+                    <h1 className="text-xl font-bold">JSON Combobox Example</h1>
+                    <p className="mb-4 text-sm">
+                        This combobox fetches user emails from a JSON endpoint with server-side search filtering.
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <JsonCombobox
+                        url="/api/users"
+                        placeholder="Select email..."
+                        searchPlaceholder="Search by email..."
+                        valueKey="value"
+                        labelKey="label"
+                        onChange={setSelectedUserId}
+                        className="w-[250px]"
+                    />
+
+                    {selectedUserId && (
+                        <p className="text-sm text-muted-foreground">
+                            Selected User ID: <span className="font-medium">{selectedUserId}</span>
+                        </p>
+                    )}
+                </div>
+            </div>
+        </AppLayout>
+    );
+}
+`}
+</ComponentSourceChild>
+
+<ComponentSourceChild language="php" title="routes/web.php">
+{`Route::get('/api/users', function (Request $request) {
+    $search = trim($request->query('search', ''));
+
+    $query = \\App\\Models\\User::select('id', 'email');
+
+    // Use starts-with search pattern for better performance
+    if ($search !== '') {
+        $query->where('email', 'like', $search . '%');
+    }
+
+    $users = $query->limit(50)->get()->map(function ($user) {
+        return [
+            'value' => (string) $user->id,
+            'label' => $user->email,
+        ];
+    });
+
+    return response()->json($users);
+});
+
+Route::get('/json-combobox-example', function () {
+    return Inertia::render('json-combobox-example');
+});`}
+</ComponentSourceChild>
+
+## Props
+
+### JsonCombobox
+
+| Prop                | Type                                    | Description                                                        |
+| ------------------- | --------------------------------------- | ------------------------------------------------------------------ |
+| `url`               | `string`                                | The endpoint URL to fetch options from                             |
+| `valueKey`          | `string` (optional)                     | The key in the data object for the value (defaults to `"value"`)  |
+| `labelKey`          | `string` (optional)                     | The key in the data object for the label (defaults to `"label"`)  |
+| `placeholder`       | `string` (optional)                     | The placeholder text for the button (defaults to `"Select option..."`) |
+| `searchPlaceholder` | `string` (optional)                     | The placeholder text for the search input (defaults to `"Search..."`) |
+| `emptyText`         | `string` (optional)                     | The text to display when no results are found (defaults to `"No results found."`) |
+| `onChange`          | `(value: string \\| null) => void` (optional) | Callback function called when the selection changes        |
+| `defaultValue`      | `string` (optional)                     | The initial selected value                                         |
+| `className`         | `string` (optional)                     | Additional CSS classes for the trigger button                      |
+
+## API Response Format
+
+The component expects a simple array of objects from the API endpoint:
+
+```json
+[
+  { "value": "1", "label": "alice@example.com" },
+  { "value": "2", "label": "bob@example.com" },
+  { "value": "3", "label": "carol@example.com" }
+]
+```
+
+The `value` and `label` keys can be customized using the `valueKey` and `labelKey` props.
+
+## Server-Side Search
+
+When a user types in the search input, the component sends a debounced request (300ms) to the API with the search query:
+
+```
+GET /api/users?search=alice
+```
+
+The backend filters results using a **starts-with pattern** (`$search . '%'`) for better performance and more predictable results. This matches emails that begin with the search term (e.g., "alice" matches "alice@example.com" but not "malice@example.com").

@@ -92,3 +92,55 @@ Route::get('/json-table-data-example', function () {
 Route::get('json-table-example', function () {
     return Inertia::render('astrify-examples/json-table-example');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Combobox Examples
+|--------------------------------------------------------------------------
+|
+|
+*/
+
+Route::get('/api/users', function (\Illuminate\Http\Request $request) {
+    $search = trim($request->query('search', ''));
+
+    $query = \App\Models\User::select('id', 'email');
+
+    if ($search !== '') {
+        $query->where('email', 'like', $search . '%');
+    }
+
+    $users = $query->limit(10)->get()->map(function ($user) {
+        return [
+            'value' => (string) $user->id,
+            'label' => $user->email,
+        ];
+    });
+
+    return response()->json($users);
+})->name('combobox.data');
+
+Route::get('json-combobox-example', function () {
+    // Get the first user to use as default value (optional)
+    $defaultUser = \App\Models\User::first();
+
+    return Inertia::render('astrify-examples/json-combobox-example', [
+        'defaultUserId' => $defaultUser?->id,
+    ]);
+});
+
+Route::post('json-combobox-example', function (\Illuminate\Http\Request $request) {
+    // Validate the form submission
+    $validated = $request->validate([
+        'task_name' => 'required|string|max:255',
+        'assigned_to' => 'required|exists:users,id',
+    ]);
+
+    \Illuminate\Support\Facades\Log::info('Task assignment', [
+        'task_name' => $validated['task_name'],
+        'assigned_to' => $validated['assigned_to'],
+    ]);
+
+    return back()->with('success', 'Task assigned successfully');
+});

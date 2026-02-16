@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DocsController;
+use App\Http\Middleware\MarkInertiaCacheable;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -27,12 +28,13 @@ Route::withoutMiddleware([
 ])->group(function () {
     Route::get('/', function () {
         return Inertia::render('welcome');
-    })->name('home');
+    })->middleware(MarkInertiaCacheable::class)->name('home');
 
     Route::redirect('/docs', '/docs/introduction')->name('docs');
 
     Route::get('/docs/{slug}', [DocsController::class, 'show'])
         ->where('slug', '.*')
+        ->middleware(MarkInertiaCacheable::class)
         ->name('docs.show');
 
     Route::get('examples/user-table-inertia', function () {
@@ -44,7 +46,7 @@ Route::withoutMiddleware([
         return Inertia::render('astrify-examples/user-table-inertia', [
             'users' => $users,
         ]);
-    })->name('table.index');
+    })->middleware(MarkInertiaCacheable::class)->name('table.index');
 
     Route::get('/json-table-data-example', function () {
         $users = \App\Models\User::select('id', 'name', 'email', 'created_at')
@@ -56,7 +58,7 @@ Route::withoutMiddleware([
 
     Route::get('json-table-example', function () {
         return Inertia::render('astrify-examples/json-table-example');
-    });
+    })->middleware(MarkInertiaCacheable::class);
 });
 
 /*
